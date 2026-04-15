@@ -1,5 +1,6 @@
 package com.ddd_in_java.workshop.application;
 
+import com.ddd_in_java.workshop.infrastructure.HttpExternalVisitors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainController {
 
+    private Context context;
+
+    private void internalInitializeContext() {
+        this.context = Context.initialize(new HttpExternalVisitors(System.getenv("USER_API")));
+    }
+
     @GetMapping("/")
     public ResponseEntity<StatusResponse> home() {
         return ResponseEntity.ok(new StatusResponse("OK"));
@@ -16,6 +23,8 @@ public class MainController {
 
     @PostMapping("/startScenario")
     public ResponseEntity<StatusResponse> internalInit() {
+        internalInitializeContext();
+
         return ResponseEntity.ok(new StatusResponse("OK"));
     }
 
