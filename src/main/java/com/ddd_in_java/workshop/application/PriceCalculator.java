@@ -16,7 +16,7 @@ public class PriceCalculator {
   }
 
   public Price calculate(List<DroppedFraction> fractions, Visit visit) {
-    visitHistory.add(visit.personId(), visit.date());
+    visitHistory.add(visit);
     var total = DroppedFraction.sum(fractions);
     if (visitHistory.numberOfVisitsIn(visit.personId(), YearMonth.from(visit.date())) >= 3) {
       total = total.times(1.05);
