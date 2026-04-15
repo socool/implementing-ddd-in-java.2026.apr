@@ -3,6 +3,8 @@ package com.ddd_in_java.workshop.application;
 import com.ddd_in_java.workshop.domain.DroppedFraction;
 import com.ddd_in_java.workshop.domain.FractionType;
 import com.ddd_in_java.workshop.domain.Weight;
+import com.ddd_in_java.workshop.presentation.PriceCalculationRequest;
+import com.ddd_in_java.workshop.presentation.PriceCalculationResponse;
 
 public class PriceCalculator {
   public PriceCalculationResponse calculate(PriceCalculationRequest request) {
