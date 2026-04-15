@@ -10,22 +10,22 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FractionTypeTests {
     @Test
     void validTypeDoesNotThrow() {
-        assertDoesNotThrow(() -> FractionType.fromString("Construction waste"));
+        assertDoesNotThrow(() -> FractionType.fromString("Construction waste", "Pineville"));
     }
 
     @Test
     void invalidTypeThrows() {
-        assertThrows(IllegalArgumentException.class, () -> FractionType.fromString("Rubbish"));
+        assertThrows(IllegalArgumentException.class, () -> FractionType.fromString("Rubbish", "Pineville"));
     }
 
     @Test
     void constructionWastePrice() {
-        assertEquals(new Price(0.15, USD), new FractionType(FractionType.AllowedFractionType.CONSTRUCTION).price());
+        assertEquals(new Price(0.15, USD), new FractionType(FractionType.AllowedFractionType.CONSTRUCTION, "Pineville").price());
     }
 
     @Test
     void greenWastePrice() {
-        assertEquals(new Price(0.1, USD), new FractionType(FractionType.AllowedFractionType.GREEN).price());
+        assertEquals(new Price(0.1, USD), new FractionType(FractionType.AllowedFractionType.GREEN, "Pineville").price());
     }
 
     @Test
