@@ -1,0 +1,46 @@
+info:
+  name: no fractions - calculatePrice
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/calculatePrice"
+  body:
+    type: json
+    data: |-
+      {
+        "date": "2023-07-23",
+        "dropped_fractions": [],
+        "person_id": "Bald Eagle",
+        "visit_id": "1"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const data = res.getBody();
+
+        test("Response should have the correct price amount", function() {
+          expect(data.price_amount).to.equal(0);
+        });
+
+        test("Response should have the correct person ID", function() {
+          expect(data.person_id).to.equal("Bald Eagle");
+        });
+
+        test("Response should have the correct visit ID", function() {
+          expect(data.visit_id).to.equal("1");
+        });
+
+        test("Response should have the correct currency", function() {
+          expect(data.price_currency).to.equal("USD");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,7 @@
+info:
+  name: session-1-no-fractions
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
