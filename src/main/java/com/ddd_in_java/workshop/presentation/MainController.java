@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+
 @RestController
 public class MainController {
 
@@ -47,7 +49,8 @@ public class MainController {
                 FractionType.fromString(dto.fraction_type(), city),
                 new Weight(dto.amount_dropped())))
             .toList();
-        var price = new PriceCalculator().calculate(fractions);
+        LocalDate date = LocalDate.parse(request.date());
+        var price = new PriceCalculator(context.visitHistory).calculate(fractions, request.person_id(), date);
         return ResponseEntity.ok(new PriceCalculationResponse(
             price.amount(), price.currency().toString(),
             request.visit_id(), request.person_id()));
