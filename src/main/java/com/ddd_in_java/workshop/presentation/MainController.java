@@ -1,8 +1,8 @@
-package com.ddd_in_java.workshop.application;
+package com.ddd_in_java.workshop.presentation;
 
+import com.ddd_in_java.workshop.application.Context;
+import com.ddd_in_java.workshop.application.PriceCalculator;
 import com.ddd_in_java.workshop.infrastructure.HttpExternalVisitors;
-import com.ddd_in_java.workshop.presentation.PriceCalculationRequest;
-import com.ddd_in_java.workshop.presentation.PriceCalculationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
