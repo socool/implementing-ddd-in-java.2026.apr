@@ -6,11 +6,13 @@ public class PriceCalculator {
 
   public PriceCalculationResponse calculate(PriceCalculationRequest request) {
     double totalPrice = request.dropped_fractions().stream().reduce(0.0,
-            (price, droppedFraction) -> price
-                    + (droppedFraction.fraction_type().equals("Green waste")
-                        ? GREEN_WASTE_PRICE_PER_KG : CONSTRUCTION_WASTE_PRICE_PER_KG)
-                    * droppedFraction.amount_dropped(),
+            (price, dto) -> price + pricePerKgFor(dto.fraction_type()) * dto.amount_dropped(),
             Double::sum);
     return new PriceCalculationResponse(totalPrice, "USD", request.visit_id(), request.person_id());
+  }
+
+  private double pricePerKgFor(String fractionType) {
+    return fractionType.equals("Green waste")
+        ? GREEN_WASTE_PRICE_PER_KG : CONSTRUCTION_WASTE_PRICE_PER_KG;
   }
 }
