@@ -7,11 +7,16 @@ public class VisitHistory {
 
     private final List<Visit> visits = new ArrayList<>();
 
-    public void add(Visit visit) {
+    public Price calculatePriceOfVisit(Visit visit, List<DroppedFraction> droppedFractions) {
         visits.add(visit);
+        var total = DroppedFraction.sum(droppedFractions);
+        if (this.numberOfVisitsInSameMonth(visit) >= 3) {
+            total = total.times(1.05);
+        }
+        return total;
     }
 
-    public int numberOfVisitsInSameMonth(Visit visit) {
+    int numberOfVisitsInSameMonth(Visit visit) {
         return (int) visits.stream().filter(v -> v.inSameMonth(visit)).count();
     }
 }

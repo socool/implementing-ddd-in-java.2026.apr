@@ -15,11 +15,6 @@ public class PriceCalculator {
   }
 
   public Price calculate(List<DroppedFraction> fractions, Visit visit) {
-    visitHistory.add(visit);
-    var total = DroppedFraction.sum(fractions);
-    if (visitHistory.numberOfVisitsInSameMonth(visit) >= 3) {
-      total = total.times(1.05);
-    }
-    return total;
+    return visitHistory.calculatePriceOfVisit(visit, fractions);
   }
 }
