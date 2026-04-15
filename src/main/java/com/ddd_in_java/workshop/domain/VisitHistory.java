@@ -1,6 +1,5 @@
 package com.ddd_in_java.workshop.domain;
 
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +12,6 @@ public class VisitHistory {
     }
 
     public int numberOfVisitsInSameMonth(Visit visit) {
-        return (int) visits.stream()
-                .filter(v -> v.personId().equals(visit.personId()))
-                .filter(v -> YearMonth.from(v.date()).equals(YearMonth.from(visit.date())))
-                .count();
+        return (int) visits.stream().filter(v -> v.inSameMonth(visit)).count();
     }
 }
