@@ -11,7 +11,7 @@ public record Price(double amount, Currency currency) {
     }
 
     public Price times(double factor) {
-        return new Price(amount * factor, currency);
+        return new Price(Math.round(amount * factor * 100.0) / 100.0, currency);
     }
 
     public Price add(Price other) {
