@@ -1,17 +1,19 @@
 package com.ddd_in_java.workshop.application;
 
+import com.ddd_in_java.workshop.domain.Currency;
 import com.ddd_in_java.workshop.domain.FractionType;
+import com.ddd_in_java.workshop.domain.Price;
 import com.ddd_in_java.workshop.domain.Weight;
 
 public class PriceCalculator {
   public PriceCalculationResponse calculate(PriceCalculationRequest request) {
-    double totalPrice = request.dropped_fractions().stream().reduce(0.0,
+    var totalPrice = request.dropped_fractions().stream().reduce(
+            new Price(0, Currency.USD),
             (price, dto) -> {
                 var weight = new Weight(dto.amount_dropped());
-                var linePrice = FractionType.fromString(dto.fraction_type()).price().times(weight.amount());
-                return price + linePrice.amount();
+                return price.add(FractionType.fromString(dto.fraction_type()).price().times(weight.amount()));
             },
-            Double::sum);
-    return new PriceCalculationResponse(totalPrice, "USD", request.visit_id(), request.person_id());
+            Price::sum);
+    return new PriceCalculationResponse(totalPrice.amount(), totalPrice.currency().toString(), request.visit_id(), request.person_id());
   }
 }

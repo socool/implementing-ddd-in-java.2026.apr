@@ -13,4 +13,12 @@ public record Price(double amount, Currency currency) {
     public Price times(double factor) {
         return new Price(amount * factor, currency);
     }
+
+    public Price add(Price other) {
+        return new Price(amount + other.amount, currency);
+    }
+
+    public static Price sum(Price left, Price right) {
+        return left.add(right);
+    }
 }

@@ -24,4 +24,9 @@ public class PriceTests {
     void times() {
         assertEquals(new Price(1.5, Currency.USD), new Price(0.15, Currency.USD).times(10));
     }
+
+    @Test
+    void add() {
+        assertEquals(new Price(7, Currency.USD), new Price(2, Currency.USD).add(new Price(5, Currency.USD)));
+    }
 }
