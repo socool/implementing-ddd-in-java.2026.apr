@@ -1,12 +1,12 @@
 package com.ddd_in_java.workshop.domain;
 
-public record FractionType(AllowedFractionType allowedFractionType) {
+public record FractionType(AllowedFractionType allowedFractionType, String city) {
     public enum AllowedFractionType { CONSTRUCTION, GREEN }
 
-    public static FractionType fromString(String type) {
+    public static FractionType fromString(String type, String city) {
         return switch (type) {
-            case "Construction waste" -> new FractionType(AllowedFractionType.CONSTRUCTION);
-            case "Green waste"        -> new FractionType(AllowedFractionType.GREEN);
+            case "Construction waste" -> new FractionType(AllowedFractionType.CONSTRUCTION, city);
+            case "Green waste"        -> new FractionType(AllowedFractionType.GREEN, city);
             default -> throw new IllegalArgumentException("Invalid fraction type: " + type);
         };
     }

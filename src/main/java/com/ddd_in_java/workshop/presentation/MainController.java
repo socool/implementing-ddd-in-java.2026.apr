@@ -37,7 +37,7 @@ public class MainController {
     public ResponseEntity<PriceCalculationResponse> calculatePrice(@RequestBody PriceCalculationRequest request) {
         var fractions = request.dropped_fractions().stream()
             .map(dto -> new DroppedFraction(
-                FractionType.fromString(dto.fraction_type()),
+                FractionType.fromString(dto.fraction_type(), "Pineville"),
                 new Weight(dto.amount_dropped())))
             .toList();
         var price = new PriceCalculator().calculate(fractions);
