@@ -3,7 +3,9 @@ package com.ddd_in_java.workshop.presentation;
 import com.ddd_in_java.workshop.application.Context;
 import com.ddd_in_java.workshop.application.PriceCalculator;
 import com.ddd_in_java.workshop.domain.DroppedFraction;
+import com.ddd_in_java.workshop.domain.ExternalVisitor;
 import com.ddd_in_java.workshop.domain.FractionType;
+import com.ddd_in_java.workshop.domain.VisitorNotFound;
 import com.ddd_in_java.workshop.domain.Weight;
 import com.ddd_in_java.workshop.infrastructure.HttpExternalVisitors;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +37,14 @@ public class MainController {
 
     @PostMapping("/calculatePrice")
     public ResponseEntity<PriceCalculationResponse> calculatePrice(@RequestBody PriceCalculationRequest request) {
+        ExternalVisitor visitor = context.externalVisitors
+            .findById(request.person_id())
+            .orElseThrow(() -> new VisitorNotFound(request.person_id()));
+        String city = visitor.city();
+
         var fractions = request.dropped_fractions().stream()
             .map(dto -> new DroppedFraction(
-                FractionType.fromString(dto.fraction_type(), "Pineville"),
+                FractionType.fromString(dto.fraction_type(), city),
                 new Weight(dto.amount_dropped())))
             .toList();
         var price = new PriceCalculator().calculate(fractions);
