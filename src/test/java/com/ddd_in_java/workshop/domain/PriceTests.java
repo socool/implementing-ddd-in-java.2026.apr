@@ -19,4 +19,9 @@ public class PriceTests {
     void pricesAreNotEqual() {
         assertNotEquals(new Price(0, Currency.USD), new Price(1, Currency.USD));
     }
+
+    @Test
+    void times() {
+        assertEquals(new Price(1.5, Currency.USD), new Price(0.15, Currency.USD).times(10));
+    }
 }

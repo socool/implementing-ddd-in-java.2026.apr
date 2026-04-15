@@ -8,13 +8,10 @@ public class PriceCalculator {
     double totalPrice = request.dropped_fractions().stream().reduce(0.0,
             (price, dto) -> {
                 var weight = new Weight(dto.amount_dropped());
-                return price + pricePerKgFor(dto.fraction_type()) * weight.amount();
+                var linePrice = FractionType.fromString(dto.fraction_type()).price().times(weight.amount());
+                return price + linePrice.amount();
             },
             Double::sum);
     return new PriceCalculationResponse(totalPrice, "USD", request.visit_id(), request.person_id());
-  }
-
-  private double pricePerKgFor(String fractionType) {
-    return FractionType.fromString(fractionType).price();
   }
 }

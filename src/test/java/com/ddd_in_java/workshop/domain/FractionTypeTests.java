@@ -2,6 +2,7 @@ package com.ddd_in_java.workshop.domain;
 
 import org.junit.jupiter.api.Test;
 
+import static com.ddd_in_java.workshop.domain.Currency.USD;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FractionTypeTests {
@@ -17,11 +18,11 @@ public class FractionTypeTests {
 
     @Test
     void constructionWastePrice() {
-        assertEquals(0.15, new FractionType(FractionType.AllowedFractionType.CONSTRUCTION).price());
+        assertEquals(new Price(0.15, USD), new FractionType(FractionType.AllowedFractionType.CONSTRUCTION).price());
     }
 
     @Test
     void greenWastePrice() {
-        assertEquals(0.1, new FractionType(FractionType.AllowedFractionType.GREEN).price());
+        assertEquals(new Price(0.1, USD), new FractionType(FractionType.AllowedFractionType.GREEN).price());
     }
 }

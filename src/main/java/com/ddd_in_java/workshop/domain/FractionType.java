@@ -11,10 +11,10 @@ public record FractionType(AllowedFractionType allowedFractionType) {
         };
     }
 
-    public double price() {
+    public Price price() {
         return switch (allowedFractionType) {
-            case CONSTRUCTION -> 0.15;
-            case GREEN        -> 0.1;
+            case CONSTRUCTION -> new Price(0.15, Currency.USD);
+            case GREEN        -> new Price(0.1, Currency.USD);
         };
     }
 }
