@@ -1,5 +1,7 @@
 package com.ddd_in_java.workshop.application;
 
+import com.ddd_in_java.workshop.domain.FractionType;
+
 public class PriceCalculator {
   private static final double GREEN_WASTE_PRICE_PER_KG = 0.1;
   private static final double CONSTRUCTION_WASTE_PRICE_PER_KG = 0.15;
@@ -12,7 +14,8 @@ public class PriceCalculator {
   }
 
   private double pricePerKgFor(String fractionType) {
-    return fractionType.equals("Green waste")
+    return FractionType.fromString(fractionType).allowedFractionType()
+        == FractionType.AllowedFractionType.GREEN
         ? GREEN_WASTE_PRICE_PER_KG : CONSTRUCTION_WASTE_PRICE_PER_KG;
   }
 }
