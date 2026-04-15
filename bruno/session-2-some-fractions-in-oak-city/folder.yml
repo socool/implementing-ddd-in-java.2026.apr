@@ -1,0 +1,7 @@
+info:
+  name: session-2-some-fractions-in-oak-city
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit
