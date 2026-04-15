@@ -12,10 +12,10 @@ public class VisitHistory {
         visits.add(visit);
     }
 
-    public int numberOfVisitsIn(String personId, YearMonth month) {
+    public int numberOfVisitsInSameMonth(Visit visit) {
         return (int) visits.stream()
-                .filter(v -> v.personId().equals(personId))
-                .filter(v -> YearMonth.from(v.date()).equals(month))
+                .filter(v -> v.personId().equals(visit.personId()))
+                .filter(v -> YearMonth.from(v.date()).equals(YearMonth.from(visit.date())))
                 .count();
     }
 }

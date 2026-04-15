@@ -16,7 +16,7 @@ class VisitHistoryTests {
     void firstVisitIsCounted() {
         var history = new VisitHistory();
         history.add(new Visit("Squirrel Gus", JULY_23));
-        assertEquals(1, history.numberOfVisitsIn("Squirrel Gus", JULY));
+        assertEquals(1, history.numberOfVisitsInSameMonth(new Visit("Squirrel Gus", JULY_23)));
     }
 
     @Test
@@ -24,7 +24,7 @@ class VisitHistoryTests {
         var history = new VisitHistory();
         history.add(new Visit("Squirrel Gus", JULY_23));
         history.add(new Visit("Squirrel Gus", LocalDate.of(2023, 7, 24)));
-        assertEquals(0, history.numberOfVisitsIn("Squirrel Gus", YearMonth.of(2023, 8)));
+        assertEquals(0, history.numberOfVisitsInSameMonth(new Visit("Squirrel Gus", LocalDate.of(2023, 8, 1))));
     }
 
     @Test
@@ -32,6 +32,6 @@ class VisitHistoryTests {
         var history = new VisitHistory();
         history.add(new Visit("Squirrel Gus", JULY_23));
         history.add(new Visit("Squirrel Gus", LocalDate.of(2023, 7, 24)));
-        assertEquals(0, history.numberOfVisitsIn("Bald Eagle", JULY));
+        assertEquals(0, history.numberOfVisitsInSameMonth(new Visit("Bald Eagle", JULY_23)));
     }
 }

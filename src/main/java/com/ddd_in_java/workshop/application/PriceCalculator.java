@@ -5,7 +5,6 @@ import com.ddd_in_java.workshop.domain.Price;
 import com.ddd_in_java.workshop.domain.Visit;
 import com.ddd_in_java.workshop.domain.VisitHistory;
 
-import java.time.YearMonth;
 import java.util.List;
 
 public class PriceCalculator {
@@ -18,7 +17,7 @@ public class PriceCalculator {
   public Price calculate(List<DroppedFraction> fractions, Visit visit) {
     visitHistory.add(visit);
     var total = DroppedFraction.sum(fractions);
-    if (visitHistory.numberOfVisitsIn(visit.personId(), YearMonth.from(visit.date())) >= 3) {
+    if (visitHistory.numberOfVisitsInSameMonth(visit) >= 3) {
       total = total.times(1.05);
     }
     return total;
