@@ -2,11 +2,7 @@ package com.ddd_in_java.workshop.presentation;
 
 import com.ddd_in_java.workshop.application.Context;
 import com.ddd_in_java.workshop.application.PriceCalculator;
-import com.ddd_in_java.workshop.domain.DroppedFraction;
-import com.ddd_in_java.workshop.domain.ExternalVisitor;
-import com.ddd_in_java.workshop.domain.FractionType;
-import com.ddd_in_java.workshop.domain.VisitorNotFound;
-import com.ddd_in_java.workshop.domain.Weight;
+import com.ddd_in_java.workshop.domain.*;
 import com.ddd_in_java.workshop.infrastructure.HttpExternalVisitors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +44,8 @@ public class MainController {
                 FractionType.fromString(dto.fraction_type(), city),
                 new Weight(dto.amount_dropped())))
             .toList();
-        var price = new PriceCalculator(context.visitHistory).calculate(fractions, request.person_id(), request.localDate());
+        var visit = new Visit(request.person_id(), request.localDate());
+        var price = new PriceCalculator(context.visitHistory).calculate(fractions, visit);
         return ResponseEntity.ok(new PriceCalculationResponse(
             price.amount(), price.currency().toString(),
             request.visit_id(), request.person_id()));

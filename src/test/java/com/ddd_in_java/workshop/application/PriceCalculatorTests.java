@@ -1,11 +1,6 @@
 package com.ddd_in_java.workshop.application;
 
-import com.ddd_in_java.workshop.domain.Currency;
-import com.ddd_in_java.workshop.domain.DroppedFraction;
-import com.ddd_in_java.workshop.domain.FractionType;
-import com.ddd_in_java.workshop.domain.Price;
-import com.ddd_in_java.workshop.domain.VisitHistory;
-import com.ddd_in_java.workshop.domain.Weight;
+import com.ddd_in_java.workshop.domain.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -28,9 +23,9 @@ class PriceCalculatorTests {
         var visitHistory = new VisitHistory();
         var calculator = new PriceCalculator(visitHistory);
 
-        calculator.calculate(fractions, "Squirrel Gus", JULY_23);
-        calculator.calculate(fractions, "Squirrel Gus", JULY_24);
-        var price = calculator.calculate(fractions, "Squirrel Gus", JULY_25);
+        calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_23));
+        calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_24));
+        var price = calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_25));
 
         assertEquals(new Price(8.65, Currency.USD), price);
     }
