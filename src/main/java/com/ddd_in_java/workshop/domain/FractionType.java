@@ -10,4 +10,11 @@ public record FractionType(AllowedFractionType allowedFractionType) {
             default -> throw new IllegalArgumentException("Invalid fraction type: " + type);
         };
     }
+
+    public double price() {
+        return switch (allowedFractionType) {
+            case CONSTRUCTION -> 0.15;
+            case GREEN        -> 0.1;
+        };
+    }
 }

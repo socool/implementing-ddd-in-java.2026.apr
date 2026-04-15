@@ -14,4 +14,14 @@ public class FractionTypeTests {
     void invalidTypeThrows() {
         assertThrows(IllegalArgumentException.class, () -> FractionType.fromString("Rubbish"));
     }
+
+    @Test
+    void constructionWastePrice() {
+        assertEquals(0.15, new FractionType(FractionType.AllowedFractionType.CONSTRUCTION).price());
+    }
+
+    @Test
+    void greenWastePrice() {
+        assertEquals(0.1, new FractionType(FractionType.AllowedFractionType.GREEN).price());
+    }
 }
