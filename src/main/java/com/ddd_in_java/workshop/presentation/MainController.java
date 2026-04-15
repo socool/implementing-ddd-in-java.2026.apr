@@ -2,6 +2,9 @@ package com.ddd_in_java.workshop.presentation;
 
 import com.ddd_in_java.workshop.application.Context;
 import com.ddd_in_java.workshop.application.PriceCalculator;
+import com.ddd_in_java.workshop.domain.DroppedFraction;
+import com.ddd_in_java.workshop.domain.FractionType;
+import com.ddd_in_java.workshop.domain.Weight;
 import com.ddd_in_java.workshop.infrastructure.HttpExternalVisitors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +35,15 @@ public class MainController {
 
     @PostMapping("/calculatePrice")
     public ResponseEntity<PriceCalculationResponse> calculatePrice(@RequestBody PriceCalculationRequest request) {
-
-        return ResponseEntity.ok(new PriceCalculator().calculate(request));
+        var fractions = request.dropped_fractions().stream()
+            .map(dto -> new DroppedFraction(
+                FractionType.fromString(dto.fraction_type()),
+                new Weight(dto.amount_dropped())))
+            .toList();
+        var price = new PriceCalculator().calculate(fractions);
+        return ResponseEntity.ok(new PriceCalculationResponse(
+            price.amount(), price.currency().toString(),
+            request.visit_id(), request.person_id()));
     }
 
     public record StatusResponse(String status) {
