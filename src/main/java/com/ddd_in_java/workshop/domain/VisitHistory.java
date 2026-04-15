@@ -14,6 +14,8 @@ public class VisitHistory {
     }
 
     public int numberOfVisitsIn(String personId, YearMonth month) {
-        return visits.size();
+        return (int) visits.stream()
+                .filter(v -> YearMonth.from(v.date()).equals(month))
+                .count();
     }
 }
