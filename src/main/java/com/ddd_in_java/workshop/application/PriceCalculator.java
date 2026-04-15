@@ -15,10 +15,6 @@ public class PriceCalculator {
     this.visitHistory = visitHistory;
   }
 
-  public Price calculate(List<DroppedFraction> fractions) {
-    return DroppedFraction.sum(fractions);
-  }
-
   public Price calculate(List<DroppedFraction> fractions, String personId, LocalDate date) {
     visitHistory.add(personId, date);
     var total = DroppedFraction.sum(fractions);
