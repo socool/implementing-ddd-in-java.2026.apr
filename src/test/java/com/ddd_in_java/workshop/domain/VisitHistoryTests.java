@@ -18,4 +18,12 @@ class VisitHistoryTests {
         history.add("Squirrel Gus", JULY_23);
         assertEquals(1, history.numberOfVisitsIn("Squirrel Gus", JULY));
     }
+
+    @Test
+    void visitsInDifferentMonthAreNotCounted() {
+        var history = new VisitHistory();
+        history.add("Squirrel Gus", JULY_23);
+        history.add("Squirrel Gus", LocalDate.of(2023, 7, 24));
+        assertEquals(0, history.numberOfVisitsIn("Squirrel Gus", YearMonth.of(2023, 8)));
+    }
 }
