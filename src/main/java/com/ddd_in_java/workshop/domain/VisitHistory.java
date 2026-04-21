@@ -17,6 +17,11 @@ public class VisitHistory {
         this.priceCalculators = initPriceCalculators();
     }
 
+    public VisitHistory(String personId, FractionPriceCalculators priceCalculators) {
+        this.personId = personId;
+        this.priceCalculators = priceCalculators;
+    }
+
     private FractionPriceCalculators initPriceCalculators() {
         var c = new FractionPriceCalculators();
         c.add(new PriceKey("Oak City",  GREEN,        "private"),  new FlatRatePriceCalculator(new Price(0.08, Currency.USD)));
