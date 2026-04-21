@@ -5,8 +5,7 @@ import java.time.YearMonth;
 
 public record Visit(String personId, LocalDate date) {
     public boolean inSameMonth(Visit other) {
-        return this.personId.equals(other.personId) &&
-                this.yearMonth().equals(other.yearMonth());
+        return this.yearMonth().equals(other.yearMonth());
     }
 
     public YearMonth yearMonth() {
