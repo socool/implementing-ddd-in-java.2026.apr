@@ -1,0 +1,7 @@
+info:
+  name: session-2.5-complex-scenario
+  type: folder
+  seq: 5
+
+request:
+  auth: inherit

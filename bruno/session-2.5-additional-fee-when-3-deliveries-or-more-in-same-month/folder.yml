@@ -1,0 +1,7 @@
+info:
+  name: session-2.5-additional-fee-when-3-deliveries-or-more-in-same-month
+  type: folder
+  seq: 4
+
+request:
+  auth: inherit

@@ -1,0 +1,51 @@
+info:
+  name: first visit - another person
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/calculatePrice"
+  body:
+    type: json
+    data: |-
+      {
+        "date": "2023-07-24",
+        "dropped_fractions": [
+          {
+            "amount_dropped": 10,
+            "fraction_type": "Construction waste"
+          }
+        ],
+        "person_id": "Bald Eagle",
+        "visit_id": "3"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const data = res.getBody();
+
+        test("Response should have the correct price amount calculated for dropped fractions", function() {
+          expect(data.price_amount).to.equal(1.5);
+        });
+
+        test("Response should have the correct person ID", function() {
+          expect(data.person_id).to.equal("Bald Eagle");
+        });
+
+        test("Response should have the correct visit ID", function() {
+          expect(data.visit_id).to.equal("3");
+        });
+
+        test("Response should have the correct currency", function() {
+          expect(data.price_currency).to.equal("USD");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
