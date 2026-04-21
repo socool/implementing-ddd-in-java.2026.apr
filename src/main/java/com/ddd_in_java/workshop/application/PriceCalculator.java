@@ -1,6 +1,13 @@
 package com.ddd_in_java.workshop.application;
 
-import com.ddd_in_java.workshop.domain.*;
+import com.ddd_in_java.workshop.domain.ExternalVisitor;
+import com.ddd_in_java.workshop.domain.ExternalVisitors;
+import com.ddd_in_java.workshop.domain.FractionPriceCalculators;
+import com.ddd_in_java.workshop.domain.Price;
+import com.ddd_in_java.workshop.domain.Visit;
+import com.ddd_in_java.workshop.domain.VisitHistories;
+import com.ddd_in_java.workshop.domain.VisitHistory;
+import com.ddd_in_java.workshop.domain.VisitorNotFound;
 
 public class PriceCalculator {
   private final VisitHistories visitHistories;
@@ -18,7 +25,9 @@ public class PriceCalculator {
     Visit visit = new Visit(visitor, request.date(), request.fractions());
     VisitHistory history = visitHistories.findByPersonId(visit.personId())
         .orElse(new VisitHistory(visit.personId(), priceCalculators));
+        
     Price price = history.calculatePriceOfVisit(visit);
+    
     visitHistories.save(history);
     return price;
   }
