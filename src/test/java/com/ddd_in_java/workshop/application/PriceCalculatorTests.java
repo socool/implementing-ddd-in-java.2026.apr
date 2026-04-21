@@ -1,6 +1,7 @@
 package com.ddd_in_java.workshop.application;
 
 import com.ddd_in_java.workshop.domain.*;
+import com.ddd_in_java.workshop.infrastructure.InMemoryVisitHistories;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -20,8 +21,7 @@ class PriceCalculatorTests {
 
     @Test
     void appliesFivePercentFeeOnThirdVisitInSameMonth() {
-        var visitHistory = new VisitHistory();
-        var calculator = new PriceCalculator(visitHistory);
+        var calculator = new PriceCalculator(new InMemoryVisitHistories());
 
         calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_23));
         calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_24));

@@ -5,7 +5,16 @@ import java.util.List;
 
 public class VisitHistory {
 
+    private final String personId;
     private final List<Visit> visits = new ArrayList<>();
+
+    public VisitHistory(String personId) {
+        this.personId = personId;
+    }
+
+    public String personId() {
+        return personId;
+    }
 
     public Price calculatePriceOfVisit(Visit visit, List<DroppedFraction> droppedFractions) {
         visits.add(visit);

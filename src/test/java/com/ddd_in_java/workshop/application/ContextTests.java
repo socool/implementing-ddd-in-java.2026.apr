@@ -11,6 +11,6 @@ class ContextTests {
     @Test
     void contextHasVisitHistory() {
         var context = Context.initialize(id -> Optional.empty());
-        assertNotNull(context.visitHistory);
+        assertNotNull(context.visitHistories);
     }
 }
