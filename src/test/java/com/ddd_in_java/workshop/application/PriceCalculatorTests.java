@@ -17,7 +17,7 @@ class PriceCalculatorTests {
     private static final ExternalVisitor GUS = new ExternalVisitor("Squirrel Gus", "private", "", "Oak City");
 
     private final List<DroppedFraction> fractions = List.of(
-            new DroppedFraction(FractionType.fromString("Green waste", "Oak City"), new Weight(103))
+            new DroppedFraction(FractionType.fromString("Green waste"), new Weight(103))
     );
 
     @Test
@@ -35,8 +35,8 @@ class PriceCalculatorTests {
     void multipleFractionsInSingleVisit() {
         var calculator = new PriceCalculator(new InMemoryVisitHistories());
         var multipleFractions = List.of(
-                new DroppedFraction(FractionType.fromString("Green waste", "Oak City"), new Weight(83)),
-                new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(18))
+                new DroppedFraction(FractionType.fromString("Green waste"), new Weight(83)),
+                new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(18))
         );
 
         var price = calculator.calculate(new Visit(GUS, JULY_25, multipleFractions));

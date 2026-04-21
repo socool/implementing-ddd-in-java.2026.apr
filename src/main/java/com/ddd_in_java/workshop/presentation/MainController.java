@@ -37,11 +37,9 @@ public class MainController {
         ExternalVisitor visitor = context.externalVisitors
             .findById(request.person_id())
             .orElseThrow(() -> new VisitorNotFound(request.person_id()));
-        String city = visitor.city();
-
         var fractions = request.dropped_fractions().stream()
             .map(dto -> new DroppedFraction(
-                FractionType.fromString(dto.fraction_type(), city),
+                FractionType.fromString(dto.fraction_type()),
                 new Weight(dto.amount_dropped())))
             .toList();
         var visit = new Visit(visitor, request.localDate(), fractions);

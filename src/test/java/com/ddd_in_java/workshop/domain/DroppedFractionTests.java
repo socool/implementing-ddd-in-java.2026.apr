@@ -8,7 +8,7 @@ public class DroppedFractionTests {
     @Test
     void holdsTypeAndWeight() {
         var fraction = new DroppedFraction(
-            new FractionType(FractionType.AllowedFractionType.CONSTRUCTION, "Pineville"),
+            new FractionType(FractionType.AllowedFractionType.CONSTRUCTION),
             new Weight(10));
         assertEquals(FractionType.AllowedFractionType.CONSTRUCTION, fraction.fractionType().allowedFractionType());
         assertEquals(10, fraction.weight().amount());
