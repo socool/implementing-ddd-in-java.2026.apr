@@ -19,10 +19,14 @@ public class VisitHistory {
 
     private FractionPriceCalculators initPriceCalculators() {
         var c = new FractionPriceCalculators();
-        c.add(new PriceKey("Oak City",  GREEN),        new FlatRatePriceCalculator(new Price(0.08, Currency.USD)));
-        c.add(new PriceKey("Oak City",  CONSTRUCTION), new FlatRatePriceCalculator(new Price(0.19, Currency.USD)));
-        c.add(new PriceKey("Pineville", GREEN),        new FlatRatePriceCalculator(new Price(0.10, Currency.USD)));
-        c.add(new PriceKey("Pineville", CONSTRUCTION), new FlatRatePriceCalculator(new Price(0.15, Currency.USD)));
+        c.add(new PriceKey("Oak City",  GREEN,        "private"),  new FlatRatePriceCalculator(new Price(0.08, Currency.USD)));
+        c.add(new PriceKey("Oak City",  CONSTRUCTION, "private"),  new FlatRatePriceCalculator(new Price(0.19, Currency.USD)));
+        c.add(new PriceKey("Pineville", GREEN,        "private"),  new FlatRatePriceCalculator(new Price(0.10, Currency.USD)));
+        c.add(new PriceKey("Pineville", CONSTRUCTION, "private"),  new FlatRatePriceCalculator(new Price(0.15, Currency.USD)));
+        c.add(new PriceKey("Oak City",  GREEN,        "business"), new FlatRatePriceCalculator(new Price(0.08, Currency.USD)));
+        c.add(new PriceKey("Oak City",  CONSTRUCTION, "business"), new FlatRatePriceCalculator(new Price(0.21, Currency.USD)));
+        c.add(new PriceKey("Pineville", GREEN,        "business"), new FlatRatePriceCalculator(new Price(0.12, Currency.USD)));
+        c.add(new PriceKey("Pineville", CONSTRUCTION, "business"), new FlatRatePriceCalculator(new Price(0.13, Currency.USD)));
         return c;
     }
 
@@ -35,7 +39,7 @@ public class VisitHistory {
         var total = visit.droppedFractions().stream()
             .reduce(new Price(0, Currency.USD), (price, fraction) -> {
                 var calculator = priceCalculators.find(
-                    new PriceKey(visit.city(), fraction.fractionType().allowedFractionType())
+                    new PriceKey(visit.city(), fraction.fractionType().allowedFractionType(), visit.visitorType())
                 ).orElseThrow();
                 return price.add(calculator.calculate(fraction));
             }, Price::sum);
