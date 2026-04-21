@@ -2,6 +2,7 @@ package com.ddd_in_java.workshop.presentation;
 
 import com.ddd_in_java.workshop.application.Context;
 import com.ddd_in_java.workshop.application.PriceCalculator;
+import com.ddd_in_java.workshop.application.VisitRequest;
 import com.ddd_in_java.workshop.domain.*;
 import com.ddd_in_java.workshop.infrastructure.HttpExternalVisitors;
 import org.springframework.http.ResponseEntity;
@@ -34,16 +35,13 @@ public class MainController {
 
     @PostMapping("/calculatePrice")
     public ResponseEntity<PriceCalculationResponse> calculatePrice(@RequestBody PriceCalculationRequest request) {
-        ExternalVisitor visitor = context.externalVisitors
-            .findById(request.person_id())
-            .orElseThrow(() -> new VisitorNotFound(request.person_id()));
         var fractions = request.dropped_fractions().stream()
             .map(dto -> new DroppedFraction(
                 FractionType.fromString(dto.fraction_type()),
                 new Weight(dto.amount_dropped())))
             .toList();
-        var visit = new Visit(visitor, request.localDate(), fractions);
-        var price = new PriceCalculator(context.visitHistories, context.priceCalculators).calculate(visit);
+        var visitRequest = new VisitRequest(request.person_id(), fractions, request.localDate());
+        var price = new PriceCalculator(context.visitHistories, context.priceCalculators, context.externalVisitors).calculate(visitRequest);
         return ResponseEntity.ok(new PriceCalculationResponse(
             price.amount(), price.currency().toString(),
             request.visit_id(), request.person_id()));
