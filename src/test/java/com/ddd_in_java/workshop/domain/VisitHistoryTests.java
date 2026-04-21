@@ -20,6 +20,15 @@ class VisitHistoryTests {
     }
 
     @Test
+    void calculatesCorrectPrice_forGreenWaste_inOakCity() {
+        var visitor = new ExternalVisitor("id", "private", "addr", "Oak City");
+        var visit = new Visit(visitor, JULY_23, List.of(
+            new DroppedFraction(FractionType.fromString("Green waste", "Oak City"), new Weight(83))
+        ));
+        assertEquals(6.64, new VisitHistory("id").calculatePriceOfVisit(visit).amount());
+    }
+
+    @Test
     void visitsInDifferentMonthAreNotCounted() {
         var history = new VisitHistory("Squirrel Gus");
         history.calculatePriceOfVisit(new Visit(GUS, JULY_23, List.of()));
