@@ -16,9 +16,9 @@ public class VisitHistory {
         return personId;
     }
 
-    public Price calculatePriceOfVisit(Visit visit, List<DroppedFraction> droppedFractions) {
+    public Price calculatePriceOfVisit(Visit visit) {
         visits.add(visit);
-        var total = DroppedFraction.sum(droppedFractions);
+        var total = DroppedFraction.sum(visit.droppedFractions());
         if (this.numberOfVisitsInSameMonth(visit) >= 3) {
             total = total.times(1.05);
         }

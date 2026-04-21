@@ -44,8 +44,8 @@ public class MainController {
                 FractionType.fromString(dto.fraction_type(), city),
                 new Weight(dto.amount_dropped())))
             .toList();
-        var visit = new Visit(visitor, request.localDate());
-        var price = new PriceCalculator(context.visitHistories).calculate(fractions, visit);
+        var visit = new Visit(visitor, request.localDate(), fractions);
+        var price = new PriceCalculator(context.visitHistories).calculate(visit);
         return ResponseEntity.ok(new PriceCalculationResponse(
             price.amount(), price.currency().toString(),
             request.visit_id(), request.person_id()));

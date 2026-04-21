@@ -24,9 +24,9 @@ class PriceCalculatorTests {
     void appliesFivePercentFeeOnThirdVisitInSameMonth() {
         var calculator = new PriceCalculator(new InMemoryVisitHistories());
 
-        calculator.calculate(fractions, new Visit(GUS, JULY_23));
-        calculator.calculate(fractions, new Visit(GUS, JULY_24));
-        var price = calculator.calculate(fractions, new Visit(GUS, JULY_25));
+        calculator.calculate(new Visit(GUS, JULY_23, fractions));
+        calculator.calculate(new Visit(GUS, JULY_24, fractions));
+        var price = calculator.calculate(new Visit(GUS, JULY_25, fractions));
 
         assertEquals(new Price(8.65, Currency.USD), price);
     }
@@ -39,7 +39,7 @@ class PriceCalculatorTests {
                 new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(18))
         );
 
-        var price = calculator.calculate(multipleFractions, new Visit(GUS, JULY_25));
+        var price = calculator.calculate(new Visit(GUS, JULY_25, multipleFractions));
 
         // 0.08 * 83 = 6.64
         // 0.19 * 18 = 3.42

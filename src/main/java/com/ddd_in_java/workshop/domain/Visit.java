@@ -2,8 +2,9 @@ package com.ddd_in_java.workshop.domain;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.List;
 
-public record Visit(ExternalVisitor visitor, LocalDate date) {
+public record Visit(ExternalVisitor visitor, LocalDate date, List<DroppedFraction> droppedFractions) {
     public String personId() { return visitor.id(); }
     public String city()     { return visitor.city(); }
 
