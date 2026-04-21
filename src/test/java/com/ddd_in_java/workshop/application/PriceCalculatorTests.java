@@ -29,4 +29,20 @@ class PriceCalculatorTests {
 
         assertEquals(new Price(8.65, Currency.USD), price);
     }
+
+    @Test
+    void multipleFractionsInSingleVisit() {
+        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var multipleFractions = List.of(
+                new DroppedFraction(FractionType.fromString("Green waste", "Oak City"), new Weight(83)),
+                new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(18))
+        );
+
+        var price = calculator.calculate(multipleFractions, new Visit("Squirrel Gus", JULY_25));
+
+        // 0.08 * 83 = 6.64
+        // 0.19 * 18 = 3.42
+        // 3.42 + 6.64 = 10.06
+        assertEquals(new Price(10.06, Currency.USD), price);
+    }
 }
