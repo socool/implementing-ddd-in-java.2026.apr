@@ -3,13 +3,27 @@ package com.ddd_in_java.workshop.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ddd_in_java.workshop.domain.FractionType.AllowedFractionType.CONSTRUCTION;
+import static com.ddd_in_java.workshop.domain.FractionType.AllowedFractionType.GREEN;
+
 public class VisitHistory {
 
     private final String personId;
     private final List<Visit> visits = new ArrayList<>();
+    private final FractionPriceCalculators priceCalculators;
 
     public VisitHistory(String personId) {
         this.personId = personId;
+        this.priceCalculators = initPriceCalculators();
+    }
+
+    private FractionPriceCalculators initPriceCalculators() {
+        var c = new FractionPriceCalculators();
+        c.add(new PriceKey("Oak City",  GREEN),        new FlatRatePriceCalculator(new Price(0.08, Currency.USD)));
+        c.add(new PriceKey("Oak City",  CONSTRUCTION), new FlatRatePriceCalculator(new Price(0.19, Currency.USD)));
+        c.add(new PriceKey("Pineville", GREEN),        new FlatRatePriceCalculator(new Price(0.10, Currency.USD)));
+        c.add(new PriceKey("Pineville", CONSTRUCTION), new FlatRatePriceCalculator(new Price(0.15, Currency.USD)));
+        return c;
     }
 
     public String personId() {
@@ -18,7 +32,13 @@ public class VisitHistory {
 
     public Price calculatePriceOfVisit(Visit visit) {
         visits.add(visit);
-        var total = DroppedFraction.sum(visit.droppedFractions());
+        var total = visit.droppedFractions().stream()
+            .reduce(new Price(0, Currency.USD), (price, fraction) -> {
+                var calculator = priceCalculators.find(
+                    new PriceKey(visit.city(), fraction.fractionType().allowedFractionType())
+                ).orElseThrow();
+                return price.add(calculator.calculate(fraction));
+            }, Price::sum);
         if (this.numberOfVisitsInSameMonth(visit) >= 3) {
             total = total.times(1.05);
         }
