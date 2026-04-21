@@ -1,0 +1,7 @@
+info:
+  name: session-3-business-customers
+  type: folder
+  seq: 6
+
+request:
+  auth: inherit
