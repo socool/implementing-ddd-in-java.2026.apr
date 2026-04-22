@@ -18,7 +18,7 @@ public class VisitHistory {
         return personId;
     }
 
-    public Price calculatePriceOfVisit(Visit visit) {
+    public PriceCalculated calculatePriceOfVisit(Visit visit) {
         var total = visit.droppedFractions().stream()
             .map(fraction -> {
                 var previousKg = previousWeightThisYear(visit, fraction.fractionType().allowedFractionType());
@@ -29,7 +29,7 @@ public class VisitHistory {
             })
             .reduce(new Price(0, Currency.USD), Price::sum);
         visits.add(visit);
-        return applyFee(total, visit);
+        return new PriceCalculated(visit.visitor(), applyFee(total, visit));
     }
 
     private Weight previousWeightThisYear(Visit currentVisit, FractionType.AllowedFractionType type) {

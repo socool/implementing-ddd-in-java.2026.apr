@@ -4,6 +4,7 @@ import com.ddd_in_java.workshop.domain.BusinessVisitor;
 import com.ddd_in_java.workshop.domain.ExternalVisitors;
 import com.ddd_in_java.workshop.domain.FractionPriceCalculators;
 import com.ddd_in_java.workshop.domain.Price;
+import com.ddd_in_java.workshop.domain.PriceCalculated;
 import com.ddd_in_java.workshop.domain.PrivateVisitor;
 import com.ddd_in_java.workshop.domain.Visit;
 import com.ddd_in_java.workshop.domain.VisitHistories;
@@ -30,15 +31,15 @@ public class PriceCalculator {
     VisitHistory history = visitHistories.findByPersonId(visitor.id())
         .orElse(new VisitHistory(visitor.id(), priceCalculators));
 
-    Price price = history.calculatePriceOfVisit(visit);
+    PriceCalculated event = history.calculatePriceOfVisit(visit);
 
     visitHistories.save(history);
 
-    switch (visitor) {
-      case BusinessVisitor bv -> invoiceSender.send(bv.email(), price);
+    switch (event.visitor()) {
+      case BusinessVisitor bv -> invoiceSender.send(bv.email(), event.price());
       case PrivateVisitor pv  -> {}
     }
 
-    return price;
+    return event.price();
   }
 }
