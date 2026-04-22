@@ -45,7 +45,7 @@ public class MainController {
                 new Weight(dto.amount_dropped())))
             .toList();
         var visitRequest = new VisitRequest(request.person_id(), fractions, request.localDate());
-        var price = new PriceCalculator(context.visitHistories, context.priceCalculators, context.externalVisitors, context.invoiceSender).calculate(visitRequest);
+        var price = new PriceCalculator(context.visitHistories, context.priceCalculators, context.externalVisitors, context.messageBus).calculate(visitRequest);
         return ResponseEntity.ok(new PriceCalculationResponse(
             price.amount(), price.currency().toString(),
             request.visit_id(), request.person_id()));

@@ -1,6 +1,7 @@
 package com.ddd_in_java.workshop.application;
 
 import com.ddd_in_java.workshop.domain.*;
+import com.ddd_in_java.workshop.infrastructure.InMemoryMessageBus;
 import com.ddd_in_java.workshop.infrastructure.InMemoryVisitHistories;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,7 @@ class PriceCalculatorTests {
     private static final LocalDate JULY_25 = LocalDate.of(2023, 7, 25);
     private static final Visitor GUS = new PrivateVisitor("Squirrel Gus", "Oak City");
     private static final ExternalVisitors GUS_VISITORS = id -> Optional.of(GUS);
+    private static final MessageBus NO_OP_BUS = event -> {};
 
     private static FractionPriceCalculators oakCityPrivatePrices() {
         var c = new FractionPriceCalculators();
@@ -47,7 +49,7 @@ class PriceCalculatorTests {
 
     @Test
     void appliesFivePercentFeeOnThirdVisitInSameMonth() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS, (email, price) -> {});
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS, NO_OP_BUS);
 
         calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_23));
         calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_24));
@@ -58,7 +60,7 @@ class PriceCalculatorTests {
 
     @Test
     void multipleFractionsInSingleVisit() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS, (email, price) -> {});
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS, NO_OP_BUS);
         var multipleFractions = List.of(
                 new DroppedFraction(FractionType.fromString("Green waste"), new Weight(83)),
                 new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(18))
@@ -81,7 +83,7 @@ class PriceCalculatorTests {
             case "Beaver Bruce"  -> Optional.of(bruce);
             default -> Optional.empty();
         };
-        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityBusinessPrices(), visitors, (email, price) -> {});
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityBusinessPrices(), visitors, NO_OP_BUS);
 
         var price1 = calculator.calculate(new VisitRequest("Beaver Bertha", constructionFractions(597),  JULY_23));
         var price2 = calculator.calculate(new VisitRequest("Beaver Bruce",  constructionFractions(1803), JULY_23));
@@ -95,8 +97,9 @@ class PriceCalculatorTests {
         var bertha = new BusinessVisitor("789 Business Ave", "Oak City", "beavers@dam-building.com");
         ExternalVisitors visitors = id -> Optional.of(bertha);
         List<String> sentTo = new ArrayList<>();
-        InvoiceSender invoiceSender = (email, price) -> sentTo.add(email);
-        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityBusinessPrices(), visitors, invoiceSender);
+        var bus = new InMemoryMessageBus();
+        bus.subscribe(new InvoiceSubscriber((email, price) -> sentTo.add(email))::on);
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityBusinessPrices(), visitors, bus);
 
         calculator.calculate(new VisitRequest("Beaver Bertha", constructionFractions(597), JULY_23));
 

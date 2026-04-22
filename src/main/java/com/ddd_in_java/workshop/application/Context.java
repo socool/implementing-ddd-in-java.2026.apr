@@ -1,6 +1,7 @@
 package com.ddd_in_java.workshop.application;
 
 import com.ddd_in_java.workshop.domain.*;
+import com.ddd_in_java.workshop.infrastructure.InMemoryMessageBus;
 import com.ddd_in_java.workshop.infrastructure.InMemoryVisitHistories;
 
 import static com.ddd_in_java.workshop.domain.FractionType.AllowedFractionType.CONSTRUCTION;
@@ -10,13 +11,17 @@ public class Context {
     public final ExternalVisitors externalVisitors;
     public final VisitHistories visitHistories = new InMemoryVisitHistories();
     public final FractionPriceCalculators priceCalculators = initPriceCalculators();
+    public final MessageBus messageBus;
 
-    private Context(ExternalVisitors externalVisitors) {
+    private Context(ExternalVisitors externalVisitors, InvoiceSender invoiceSender) {
         this.externalVisitors = externalVisitors;
+        var bus = new InMemoryMessageBus();
+        bus.subscribe(new InvoiceSubscriber(invoiceSender)::on);
+        this.messageBus = bus;
     }
 
-    public static Context initialize(ExternalVisitors externalVisitors) {
-        return new Context(externalVisitors);
+    public static Context initialize(ExternalVisitors externalVisitors, InvoiceSender invoiceSender) {
+        return new Context(externalVisitors, invoiceSender);
     }
 
     private static FractionPriceCalculators initPriceCalculators() {
