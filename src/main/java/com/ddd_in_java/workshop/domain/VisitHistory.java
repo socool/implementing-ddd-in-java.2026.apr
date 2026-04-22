@@ -19,15 +19,26 @@ public class VisitHistory {
     }
 
     public Price calculatePriceOfVisit(Visit visit) {
-        visits.add(visit);
         var total = visit.droppedFractions().stream()
-            .reduce(new Price(0, Currency.USD), (price, fraction) -> {
+            .map(fraction -> {
+                var previousKg = previousWeightThisYear(visit, fraction.fractionType().allowedFractionType());
                 var calculator = priceCalculators.find(
                     new PriceKey(visit.city(), fraction.fractionType().allowedFractionType(), visit.visitorType())
                 ).orElseThrow();
-                return price.add(calculator.calculate(fraction));
-            }, Price::sum);
+                return calculator.calculate(fraction, previousKg);
+            })
+            .reduce(new Price(0, Currency.USD), Price::sum);
+        visits.add(visit);
         return applyFee(total, visit);
+    }
+
+    private Weight previousWeightThisYear(Visit currentVisit, FractionType.AllowedFractionType type) {
+        return visits.stream()
+            .filter(v -> v.yearMonth().getYear() == currentVisit.yearMonth().getYear())
+            .flatMap(v -> v.droppedFractions().stream())
+            .filter(f -> f.fractionType().allowedFractionType() == type)
+            .map(DroppedFraction::weight)
+            .reduce(new Weight(0), Weight::add);
     }
 
     private Price applyFee(Price price, Visit visit) {
