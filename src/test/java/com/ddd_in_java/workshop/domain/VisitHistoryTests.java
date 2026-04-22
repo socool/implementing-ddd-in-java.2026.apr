@@ -74,6 +74,31 @@ class VisitHistoryTests {
     }
 
     @Test
+    void businessCustomer_tieredRate_firstVisitBelowThreshold() {
+        var visitor = new ExternalVisitor("id", "business", "addr", "Oak City");
+        var visit = new Visit(visitor, JULY_23, List.of(
+            new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(597))
+        ));
+        // 597 kg, prev=0 → 597×0.21 = 125.37
+        assertEquals(125.37, new VisitHistory("id", oakCityPrices()).calculatePriceOfVisit(visit).amount());
+    }
+
+    @Test
+    void businessCustomer_tieredRate_secondVisitSpansThreshold() {
+        var visitor = new ExternalVisitor("id", "business", "addr", "Oak City");
+        var history = new VisitHistory("id", oakCityPrices());
+        var visit1 = new Visit(visitor, JULY_23, List.of(
+            new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(597))
+        ));
+        var visit2 = new Visit(visitor, LocalDate.of(2023, 7, 24), List.of(
+            new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(1803))
+        ));
+        history.calculatePriceOfVisit(visit1);
+        // 1803 kg, prev=597 → (403×0.21) + (1400×0.29) = 84.63 + 406.00 = 490.63
+        assertEquals(490.63, history.calculatePriceOfVisit(visit2).amount());
+    }
+
+    @Test
     void visitsInDifferentMonthAreNotCounted() {
         var history = new VisitHistory("Squirrel Gus", oakCityPrices());
         history.calculatePriceOfVisit(new Visit(GUS, JULY_23, List.of()));
