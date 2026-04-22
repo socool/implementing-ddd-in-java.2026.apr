@@ -23,8 +23,8 @@ public class PriceCalculator {
   public Price calculate(VisitRequest request) {
     Visitor visitor = externalVisitors.findById(request.personId()).orElseThrow(() -> new VisitorNotFound(request.personId()));
     Visit visit = new Visit(visitor, request.date(), request.fractions());
-    VisitHistory history = visitHistories.findByPersonId(visit.personId())
-        .orElse(new VisitHistory(visit.personId(), priceCalculators));
+    VisitHistory history = visitHistories.findByPersonId(visitor.id())
+        .orElse(new VisitHistory(visitor.id(), priceCalculators));
         
     Price price = history.calculatePriceOfVisit(visit);
     

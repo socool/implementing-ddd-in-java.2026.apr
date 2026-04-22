@@ -43,7 +43,7 @@ class VisitHistoryTests {
 
     @Test
     void businessCustomer_paysBusinessRate_forConstructionWaste_inOakCity() {
-        var visitor = new BusinessVisitor("id", "Oak City");
+        var visitor = new BusinessVisitor("addr", "Oak City");
         var visit = new Visit(visitor, JULY_23, List.of(
             new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(18))
         ));
@@ -64,7 +64,7 @@ class VisitHistoryTests {
 
     @Test
     void businessCustomer_with3VisitsInSameMonth_doesNotPayFee() {
-        var business = new BusinessVisitor("Biz", "Oak City");
+        var business = new BusinessVisitor("addr", "Oak City");
         var history = new VisitHistory("Biz", oakCityPrices());
         var visit1 = new Visit(business, JULY_23, List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
         var visit2 = new Visit(business, LocalDate.of(2023, 7, 24), List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
@@ -77,7 +77,7 @@ class VisitHistoryTests {
 
     @Test
     void businessCustomer_tieredRate_firstVisitBelowThreshold() {
-        var visitor = new BusinessVisitor("id", "Oak City");
+        var visitor = new BusinessVisitor("addr", "Oak City");
         var visit = new Visit(visitor, JULY_23, List.of(
             new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(597))
         ));
@@ -87,7 +87,7 @@ class VisitHistoryTests {
 
     @Test
     void businessCustomer_tieredRate_secondVisitSpansThreshold() {
-        var visitor = new BusinessVisitor("id", "Oak City");
+        var visitor = new BusinessVisitor("addr", "Oak City");
         var history = new VisitHistory("id", oakCityPrices());
         var visit1 = new Visit(visitor, JULY_23, List.of(
             new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(597))

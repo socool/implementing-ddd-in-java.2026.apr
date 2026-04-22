@@ -48,9 +48,9 @@ class PriceCalculatorTests {
     void appliesFivePercentFeeOnThirdVisitInSameMonth() {
         var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS);
 
-        calculator.calculate(new VisitRequest(GUS.personId(), fractions, JULY_23));
-        calculator.calculate(new VisitRequest(GUS.personId(), fractions, JULY_24));
-        var price = calculator.calculate(new VisitRequest(GUS.personId(), fractions, JULY_25));
+        calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_23));
+        calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_24));
+        var price = calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_25));
 
         assertEquals(new Price(8.65, Currency.USD), price);
     }
@@ -63,7 +63,7 @@ class PriceCalculatorTests {
                 new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(18))
         );
 
-        var price = calculator.calculate(new VisitRequest(GUS.personId(), multipleFractions, JULY_25));
+        var price = calculator.calculate(new VisitRequest(GUS.id(), multipleFractions, JULY_25));
 
         // 0.08 * 83 = 6.64
         // 0.19 * 18 = 3.42
@@ -73,8 +73,8 @@ class PriceCalculatorTests {
 
     @Test
     void businessEmployees_shareExemption_byBusinessAddress() {
-        var bertha = new BusinessVisitor("Beaver Bertha", "Oak City");
-        var bruce  = new BusinessVisitor("Beaver Bruce",  "Oak City");
+        var bertha = new BusinessVisitor("789 Business Ave", "Oak City");
+        var bruce  = new BusinessVisitor("789 Business Ave", "Oak City");
         ExternalVisitors visitors = id -> switch (id) {
             case "Beaver Bertha" -> Optional.of(bertha);
             case "Beaver Bruce"  -> Optional.of(bruce);
