@@ -1,8 +1,12 @@
-package com.ddd_in_java.workshop.domain;
+package com.ddd_in_java.workshop.domain.priceCalculation;
+
+import com.ddd_in_java.workshop.domain.DroppedFraction;
+import com.ddd_in_java.workshop.domain.Price;
+import com.ddd_in_java.workshop.domain.Weight;
 
 public record TierBasedPriceCalculator(double weightLimit,
-                                        FractionPriceCalculator firstPriceCalculator,
-                                        FractionPriceCalculator secondPriceCalculator)
+                                       FractionPriceCalculator firstPriceCalculator,
+                                       FractionPriceCalculator secondPriceCalculator)
         implements FractionPriceCalculator {
 
     public Price calculate(DroppedFraction fraction) {

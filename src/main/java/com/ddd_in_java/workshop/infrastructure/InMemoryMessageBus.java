@@ -1,7 +1,7 @@
 package com.ddd_in_java.workshop.infrastructure;
 
 import com.ddd_in_java.workshop.application.MessageBus;
-import com.ddd_in_java.workshop.domain.DomainEvent;
+import com.ddd_in_java.workshop.domain.events.DomainEvent;
 
 import java.util.ArrayList;
 import java.util.List;

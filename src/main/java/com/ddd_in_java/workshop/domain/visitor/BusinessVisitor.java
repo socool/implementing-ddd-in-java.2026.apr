@@ -1,4 +1,4 @@
-package com.ddd_in_java.workshop.domain;
+package com.ddd_in_java.workshop.domain.visitor;
 
 public record BusinessVisitor(String address, String city, String email) implements Visitor {
     public String id()   { return address + "|" + city; }

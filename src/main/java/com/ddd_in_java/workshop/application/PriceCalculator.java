@@ -1,13 +1,13 @@
 package com.ddd_in_java.workshop.application;
 
-import com.ddd_in_java.workshop.domain.ExternalVisitors;
-import com.ddd_in_java.workshop.domain.FractionPriceCalculators;
+import com.ddd_in_java.workshop.domain.visitor.ExternalVisitors;
+import com.ddd_in_java.workshop.domain.priceCalculation.FractionPriceCalculators;
 import com.ddd_in_java.workshop.domain.Price;
-import com.ddd_in_java.workshop.domain.PriceCalculated;
+import com.ddd_in_java.workshop.domain.events.PriceCalculated;
 import com.ddd_in_java.workshop.domain.Visit;
 import com.ddd_in_java.workshop.domain.VisitHistories;
 import com.ddd_in_java.workshop.domain.VisitHistory;
-import com.ddd_in_java.workshop.domain.Visitor;
+import com.ddd_in_java.workshop.domain.visitor.Visitor;
 import com.ddd_in_java.workshop.domain.VisitorNotFound;
 
 public class PriceCalculator {

@@ -1,5 +1,12 @@
 package com.ddd_in_java.workshop.domain;
 
+import com.ddd_in_java.workshop.domain.priceCalculation.FlatRatePriceCalculator;
+import com.ddd_in_java.workshop.domain.priceCalculation.FractionPriceCalculators;
+import com.ddd_in_java.workshop.domain.priceCalculation.PriceKey;
+import com.ddd_in_java.workshop.domain.priceCalculation.TierBasedPriceCalculator;
+import com.ddd_in_java.workshop.domain.visitor.BusinessVisitor;
+import com.ddd_in_java.workshop.domain.visitor.PrivateVisitor;
+import com.ddd_in_java.workshop.domain.visitor.Visitor;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

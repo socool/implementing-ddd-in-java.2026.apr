@@ -1,8 +1,8 @@
 package com.ddd_in_java.workshop.infrastructure;
 
-import com.ddd_in_java.workshop.domain.ExternalVisitor;
-import com.ddd_in_java.workshop.domain.ExternalVisitors;
-import com.ddd_in_java.workshop.domain.Visitor;
+import com.ddd_in_java.workshop.domain.visitor.ExternalVisitor;
+import com.ddd_in_java.workshop.domain.visitor.ExternalVisitors;
+import com.ddd_in_java.workshop.domain.visitor.Visitor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
 

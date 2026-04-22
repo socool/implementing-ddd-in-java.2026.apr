@@ -1,9 +1,9 @@
 package com.ddd_in_java.workshop.application;
 
-import com.ddd_in_java.workshop.domain.BusinessVisitor;
-import com.ddd_in_java.workshop.domain.DomainEvent;
-import com.ddd_in_java.workshop.domain.PriceCalculated;
-import com.ddd_in_java.workshop.domain.PrivateVisitor;
+import com.ddd_in_java.workshop.domain.visitor.BusinessVisitor;
+import com.ddd_in_java.workshop.domain.events.DomainEvent;
+import com.ddd_in_java.workshop.domain.events.PriceCalculated;
+import com.ddd_in_java.workshop.domain.visitor.PrivateVisitor;
 
 public class InvoiceSubscriber {
 

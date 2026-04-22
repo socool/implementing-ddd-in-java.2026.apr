@@ -1,4 +1,4 @@
-package com.ddd_in_java.workshop.domain;
+package com.ddd_in_java.workshop.domain.visitor;
 
 import java.util.Optional;
 

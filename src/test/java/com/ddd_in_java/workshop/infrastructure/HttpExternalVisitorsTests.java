@@ -1,6 +1,6 @@
 package com.ddd_in_java.workshop.infrastructure;
 
-import com.ddd_in_java.workshop.domain.PrivateVisitor;
+import com.ddd_in_java.workshop.domain.visitor.PrivateVisitor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

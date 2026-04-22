@@ -1,5 +1,9 @@
 package com.ddd_in_java.workshop.domain;
 
+import com.ddd_in_java.workshop.domain.events.PriceCalculated;
+import com.ddd_in_java.workshop.domain.priceCalculation.FractionPriceCalculators;
+import com.ddd_in_java.workshop.domain.priceCalculation.PriceKey;
+
 import java.util.ArrayList;
 import java.util.List;
 

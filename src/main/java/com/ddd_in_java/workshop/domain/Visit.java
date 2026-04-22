@@ -1,5 +1,7 @@
 package com.ddd_in_java.workshop.domain;
 
+import com.ddd_in_java.workshop.domain.visitor.Visitor;
+
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;

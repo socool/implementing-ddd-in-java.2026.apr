@@ -1,5 +1,6 @@
 package com.ddd_in_java.workshop.domain;
 
+import com.ddd_in_java.workshop.domain.priceCalculation.FlatRatePriceCalculator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
