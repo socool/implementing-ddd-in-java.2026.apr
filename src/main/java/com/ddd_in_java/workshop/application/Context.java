@@ -26,7 +26,9 @@ public class Context {
         c.add(new PriceKey("Pineville", GREEN,        "private"),  new FlatRatePriceCalculator(new Price(0.10, Currency.USD)));
         c.add(new PriceKey("Pineville", CONSTRUCTION, "private"),  new FlatRatePriceCalculator(new Price(0.15, Currency.USD)));
         c.add(new PriceKey("Oak City",  GREEN,        "business"), new FlatRatePriceCalculator(new Price(0.08, Currency.USD)));
-        c.add(new PriceKey("Oak City",  CONSTRUCTION, "business"), new FlatRatePriceCalculator(new Price(0.21, Currency.USD)));
+        c.add(new PriceKey("Oak City",  CONSTRUCTION, "business"), new TierBasedPriceCalculator(1000,
+                new FlatRatePriceCalculator(new Price(0.21, Currency.USD)),
+                new FlatRatePriceCalculator(new Price(0.29, Currency.USD))));
         c.add(new PriceKey("Pineville", GREEN,        "business"), new FlatRatePriceCalculator(new Price(0.12, Currency.USD)));
         c.add(new PriceKey("Pineville", CONSTRUCTION, "business"), new FlatRatePriceCalculator(new Price(0.13, Currency.USD)));
         return c;

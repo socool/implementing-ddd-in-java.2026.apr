@@ -19,7 +19,9 @@ class VisitHistoryTests {
         c.add(new PriceKey("Oak City", GREEN,        "private"),  new FlatRatePriceCalculator(new Price(0.08, Currency.USD)));
         c.add(new PriceKey("Oak City", CONSTRUCTION, "private"),  new FlatRatePriceCalculator(new Price(0.19, Currency.USD)));
         c.add(new PriceKey("Oak City", GREEN,        "business"), new FlatRatePriceCalculator(new Price(0.08, Currency.USD)));
-        c.add(new PriceKey("Oak City", CONSTRUCTION, "business"), new FlatRatePriceCalculator(new Price(0.21, Currency.USD)));
+        c.add(new PriceKey("Oak City", CONSTRUCTION, "business"), new TierBasedPriceCalculator(1000,
+            new FlatRatePriceCalculator(new Price(0.21, Currency.USD)),
+            new FlatRatePriceCalculator(new Price(0.29, Currency.USD))));
         return c;
     }
 
