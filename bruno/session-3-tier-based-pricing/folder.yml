@@ -1,0 +1,7 @@
+info:
+  name: session-3-tier-based-pricing
+  type: folder
+  seq: 7
+
+request:
+  auth: inherit

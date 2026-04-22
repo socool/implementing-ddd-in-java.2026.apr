@@ -1,0 +1,51 @@
+info:
+  name: fifth visit - Beaver Bertha 600kg new year
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/calculatePrice"
+  body:
+    type: json
+    data: |-
+      {
+        "date": "2024-01-15",
+        "dropped_fractions": [
+          {
+            "amount_dropped": 600,
+            "fraction_type": "Construction waste"
+          }
+        ],
+        "person_id": "Beaver Bertha",
+        "visit_id": "5"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const data = res.getBody();
+
+        test("Response should have the correct price amount calculated for dropped fractions", function() {
+          expect(data.price_amount).to.equal(126.00);
+        });
+
+        test("Response should have the correct person ID", function() {
+          expect(data.person_id).to.equal("Beaver Bertha");
+        });
+
+        test("Response should have the correct visit ID", function() {
+          expect(data.visit_id).to.equal("5");
+        });
+
+        test("Response should have the correct currency", function() {
+          expect(data.price_currency).to.equal("USD");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
