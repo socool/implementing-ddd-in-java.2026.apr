@@ -1,4 +1,4 @@
-package com.ddd_in_java.workshop.application;
+package com.ddd_in_java.workshop.domain.invoicing;
 
 import com.ddd_in_java.workshop.domain.Price;
 

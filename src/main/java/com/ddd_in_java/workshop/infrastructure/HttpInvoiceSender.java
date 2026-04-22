@@ -1,6 +1,6 @@
 package com.ddd_in_java.workshop.infrastructure;
 
-import com.ddd_in_java.workshop.application.InvoiceSender;
+import com.ddd_in_java.workshop.domain.invoicing.InvoiceSender;
 import com.ddd_in_java.workshop.domain.Price;
 import org.springframework.web.client.RestClient;
 

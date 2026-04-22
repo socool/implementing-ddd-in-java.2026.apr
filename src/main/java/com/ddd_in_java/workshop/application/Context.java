@@ -1,6 +1,8 @@
 package com.ddd_in_java.workshop.application;
 
 import com.ddd_in_java.workshop.domain.*;
+import com.ddd_in_java.workshop.domain.invoicing.InvoiceHandler;
+import com.ddd_in_java.workshop.domain.invoicing.InvoiceSender;
 import com.ddd_in_java.workshop.domain.priceCalculation.FlatRatePriceCalculator;
 import com.ddd_in_java.workshop.domain.priceCalculation.FractionPriceCalculators;
 import com.ddd_in_java.workshop.domain.priceCalculation.PriceKey;
@@ -21,7 +23,7 @@ public class Context {
     private Context(ExternalVisitors externalVisitors, InvoiceSender invoiceSender) {
         this.externalVisitors = externalVisitors;
         var bus = new InMemoryMessageBus();
-        bus.subscribe(new InvoiceSubscriber(invoiceSender)::on);
+        bus.subscribe(new InvoiceHandler(invoiceSender)::handle);
         this.messageBus = bus;
     }
 

@@ -1,6 +1,7 @@
 package com.ddd_in_java.workshop.application;
 
 import com.ddd_in_java.workshop.domain.*;
+import com.ddd_in_java.workshop.domain.invoicing.InvoiceHandler;
 import com.ddd_in_java.workshop.domain.priceCalculation.FlatRatePriceCalculator;
 import com.ddd_in_java.workshop.domain.priceCalculation.FractionPriceCalculators;
 import com.ddd_in_java.workshop.domain.priceCalculation.PriceKey;
@@ -106,7 +107,7 @@ class PriceCalculatorTests {
         ExternalVisitors visitors = id -> Optional.of(bertha);
         List<String> sentTo = new ArrayList<>();
         var bus = new InMemoryMessageBus();
-        bus.subscribe(new InvoiceSubscriber((email, price) -> sentTo.add(email))::on);
+        bus.subscribe(new InvoiceHandler((email, price) -> sentTo.add(email))::handle);
         var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityBusinessPrices(), visitors, bus);
 
         calculator.calculate(new VisitRequest("Beaver Bertha", constructionFractions(597), JULY_23));
