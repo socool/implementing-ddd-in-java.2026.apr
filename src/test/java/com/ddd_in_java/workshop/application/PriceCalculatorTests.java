@@ -27,6 +27,19 @@ class PriceCalculatorTests {
         return c;
     }
 
+    private static FractionPriceCalculators oakCityBusinessPrices() {
+        var c = new FractionPriceCalculators();
+        c.add(new PriceKey("Oak City", GREEN,        "business"), new FlatRatePriceCalculator(new Price(0.08, Currency.USD)));
+        c.add(new PriceKey("Oak City", CONSTRUCTION, "business"), new TierBasedPriceCalculator(1000,
+            new FlatRatePriceCalculator(new Price(0.21, Currency.USD)),
+            new FlatRatePriceCalculator(new Price(0.29, Currency.USD))));
+        return c;
+    }
+
+    private static List<DroppedFraction> constructionFractions(double kg) {
+        return List.of(new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(kg)));
+    }
+
     private final List<DroppedFraction> fractions = List.of(
             new DroppedFraction(FractionType.fromString("Green waste"), new Weight(103))
     );
@@ -56,5 +69,23 @@ class PriceCalculatorTests {
         // 0.19 * 18 = 3.42
         // 3.42 + 6.64 = 10.06
         assertEquals(new Price(10.06, Currency.USD), price);
+    }
+
+    @Test
+    void businessEmployees_shareExemption_byBusinessAddress() {
+        var bertha = new BusinessVisitor("Beaver Bertha", "Oak City");
+        var bruce  = new BusinessVisitor("Beaver Bruce",  "Oak City");
+        ExternalVisitors visitors = id -> switch (id) {
+            case "Beaver Bertha" -> Optional.of(bertha);
+            case "Beaver Bruce"  -> Optional.of(bruce);
+            default -> Optional.empty();
+        };
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityBusinessPrices(), visitors);
+
+        var price1 = calculator.calculate(new VisitRequest("Beaver Bertha", constructionFractions(597),  JULY_23));
+        var price2 = calculator.calculate(new VisitRequest("Beaver Bruce",  constructionFractions(1803), JULY_23));
+
+        assertEquals(125.37, price1.amount(), 0.001);
+        assertEquals(490.63, price2.amount(), 0.001); // shares Bertha's 597 kg: (403×0.21)+(1400×0.29)
     }
 }
