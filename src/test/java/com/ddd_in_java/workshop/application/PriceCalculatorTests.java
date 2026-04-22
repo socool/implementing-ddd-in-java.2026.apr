@@ -17,7 +17,7 @@ class PriceCalculatorTests {
     private static final LocalDate JULY_23 = LocalDate.of(2023, 7, 23);
     private static final LocalDate JULY_24 = LocalDate.of(2023, 7, 24);
     private static final LocalDate JULY_25 = LocalDate.of(2023, 7, 25);
-    private static final ExternalVisitor GUS = new ExternalVisitor("Squirrel Gus", "private", "", "Oak City");
+    private static final Visitor GUS = new PrivateVisitor("Squirrel Gus", "Oak City");
     private static final ExternalVisitors GUS_VISITORS = id -> Optional.of(GUS);
 
     private static FractionPriceCalculators oakCityPrivatePrices() {
@@ -35,9 +35,9 @@ class PriceCalculatorTests {
     void appliesFivePercentFeeOnThirdVisitInSameMonth() {
         var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS);
 
-        calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_23));
-        calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_24));
-        var price = calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_25));
+        calculator.calculate(new VisitRequest(GUS.personId(), fractions, JULY_23));
+        calculator.calculate(new VisitRequest(GUS.personId(), fractions, JULY_24));
+        var price = calculator.calculate(new VisitRequest(GUS.personId(), fractions, JULY_25));
 
         assertEquals(new Price(8.65, Currency.USD), price);
     }
@@ -50,7 +50,7 @@ class PriceCalculatorTests {
                 new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(18))
         );
 
-        var price = calculator.calculate(new VisitRequest(GUS.id(), multipleFractions, JULY_25));
+        var price = calculator.calculate(new VisitRequest(GUS.personId(), multipleFractions, JULY_25));
 
         // 0.08 * 83 = 6.64
         // 0.19 * 18 = 3.42

@@ -2,6 +2,7 @@ package com.ddd_in_java.workshop.infrastructure;
 
 import com.ddd_in_java.workshop.domain.ExternalVisitor;
 import com.ddd_in_java.workshop.domain.ExternalVisitors;
+import com.ddd_in_java.workshop.domain.Visitor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
 
@@ -23,7 +24,7 @@ public class HttpExternalVisitors implements ExternalVisitors {
     }
 
     @Override
-    public Optional<ExternalVisitor> findById(String id) {
+    public Optional<Visitor> findById(String id) {
         List<UserDto> users = restClient.get()
             .uri("/api/users")
             .retrieve()
@@ -32,6 +33,7 @@ public class HttpExternalVisitors implements ExternalVisitors {
         return users.stream()
             .filter(u -> u.id().equals(id))
             .findFirst()
-            .map(u -> new ExternalVisitor(u.id(), u.type(), u.address(), u.city()));
+            .map(u -> new ExternalVisitor(u.id(), u.type(), u.address(), u.city()))
+            .map(Visitor::FromExternalVisitor);
     }
 }

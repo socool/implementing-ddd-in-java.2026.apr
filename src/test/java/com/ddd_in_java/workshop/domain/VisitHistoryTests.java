@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class VisitHistoryTests {
 
     private static final LocalDate JULY_23 = LocalDate.of(2023, 7, 23);
-    private static final ExternalVisitor GUS = new ExternalVisitor("Squirrel Gus", "private", "", "Oak City");
+    private static final Visitor GUS = new PrivateVisitor("Squirrel Gus", "Oak City");
 
     private static FractionPriceCalculators oakCityPrices() {
         var c = new FractionPriceCalculators();
@@ -34,7 +34,7 @@ class VisitHistoryTests {
 
     @Test
     void calculatesCorrectPrice_forGreenWaste_inOakCity() {
-        var visitor = new ExternalVisitor("id", "private", "addr", "Oak City");
+        var visitor = new PrivateVisitor("id", "Oak City");
         var visit = new Visit(visitor, JULY_23, List.of(
             new DroppedFraction(FractionType.fromString("Green waste"), new Weight(83))
         ));
@@ -43,7 +43,7 @@ class VisitHistoryTests {
 
     @Test
     void businessCustomer_paysBusinessRate_forConstructionWaste_inOakCity() {
-        var visitor = new ExternalVisitor("id", "business", "addr", "Oak City");
+        var visitor = new BusinessVisitor("id", "Oak City");
         var visit = new Visit(visitor, JULY_23, List.of(
             new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(18))
         ));
@@ -64,7 +64,7 @@ class VisitHistoryTests {
 
     @Test
     void businessCustomer_with3VisitsInSameMonth_doesNotPayFee() {
-        var business = new ExternalVisitor("Biz", "business", "", "Oak City");
+        var business = new BusinessVisitor("Biz", "Oak City");
         var history = new VisitHistory("Biz", oakCityPrices());
         var visit1 = new Visit(business, JULY_23, List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
         var visit2 = new Visit(business, LocalDate.of(2023, 7, 24), List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
@@ -77,7 +77,7 @@ class VisitHistoryTests {
 
     @Test
     void businessCustomer_tieredRate_firstVisitBelowThreshold() {
-        var visitor = new ExternalVisitor("id", "business", "addr", "Oak City");
+        var visitor = new BusinessVisitor("id", "Oak City");
         var visit = new Visit(visitor, JULY_23, List.of(
             new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(597))
         ));
@@ -87,7 +87,7 @@ class VisitHistoryTests {
 
     @Test
     void businessCustomer_tieredRate_secondVisitSpansThreshold() {
-        var visitor = new ExternalVisitor("id", "business", "addr", "Oak City");
+        var visitor = new BusinessVisitor("id", "Oak City");
         var history = new VisitHistory("id", oakCityPrices());
         var visit1 = new Visit(visitor, JULY_23, List.of(
             new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(597))

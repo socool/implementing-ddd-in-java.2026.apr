@@ -1,6 +1,6 @@
 package com.ddd_in_java.workshop.infrastructure;
 
-import com.ddd_in_java.workshop.domain.ExternalVisitor;
+import com.ddd_in_java.workshop.domain.PrivateVisitor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -30,14 +30,14 @@ public class HttpExternalVisitorsTests {
         mockServer.expect(requestTo("http://test/api/users"))
                 .andRespond(withSuccess("""
                         [
-                          {"id": "42", "type": "RESIDENT", "address": "1 Main St", "city": "Oak City"},
-                          {"id": "99", "type": "BUSINESS", "address": "2 Elm St", "city": "Maple Town"}
+                          {"id": "42", "type": "private", "address": "1 Main St", "city": "Oak City"},
+                          {"id": "99", "type": "business", "address": "2 Elm St", "city": "Maple Town"}
                         ]
                         """, MediaType.APPLICATION_JSON));
 
         var visitor = visitors.findById("42");
 
-        assertEquals(Optional.of(new ExternalVisitor("42", "RESIDENT", "1 Main St", "Oak City")), visitor);
+        assertEquals(Optional.of(new PrivateVisitor("42", "Oak City")), visitor);
     }
 
 }

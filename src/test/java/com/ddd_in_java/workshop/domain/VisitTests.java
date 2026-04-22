@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VisitTests {
 
-    private static final ExternalVisitor GUS = new ExternalVisitor("Squirrel Gus", "private", "", "Oak City");
+    private static final Visitor GUS = new PrivateVisitor("Squirrel Gus", "Oak City");
 
     @Test
     void holdsPersonIdAndDate() {
