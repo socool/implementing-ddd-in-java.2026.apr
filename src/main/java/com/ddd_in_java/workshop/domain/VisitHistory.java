@@ -27,10 +27,14 @@ public class VisitHistory {
                 ).orElseThrow();
                 return price.add(calculator.calculate(fraction));
             }, Price::sum);
-        if (this.numberOfVisitsInSameMonth(visit) >= 3) {
-            total = total.times(1.05);
+        return applyFee(total, visit);
+    }
+
+    private Price applyFee(Price price, Visit visit) {
+        if (this.numberOfVisitsInSameMonth(visit) >= 3 && visit.visitorType().equals("private")) {
+            return price.times(1.05);
         }
-        return total;
+        return price;
     }
 
     int numberOfVisitsInSameMonth(Visit visit) {
