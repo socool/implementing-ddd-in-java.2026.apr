@@ -5,6 +5,7 @@ import com.ddd_in_java.workshop.infrastructure.InMemoryVisitHistories;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,7 @@ class PriceCalculatorTests {
 
     @Test
     void appliesFivePercentFeeOnThirdVisitInSameMonth() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS);
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS, (email, price) -> {});
 
         calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_23));
         calculator.calculate(new VisitRequest(GUS.id(), fractions, JULY_24));
@@ -57,7 +58,7 @@ class PriceCalculatorTests {
 
     @Test
     void multipleFractionsInSingleVisit() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS);
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityPrivatePrices(), GUS_VISITORS, (email, price) -> {});
         var multipleFractions = List.of(
                 new DroppedFraction(FractionType.fromString("Green waste"), new Weight(83)),
                 new DroppedFraction(FractionType.fromString("Construction waste"), new Weight(18))
@@ -73,19 +74,32 @@ class PriceCalculatorTests {
 
     @Test
     void businessEmployees_shareExemption_byBusinessAddress() {
-        var bertha = new BusinessVisitor("789 Business Ave", "Oak City");
-        var bruce  = new BusinessVisitor("789 Business Ave", "Oak City");
+        var bertha = new BusinessVisitor("789 Business Ave", "Oak City", "");
+        var bruce  = new BusinessVisitor("789 Business Ave", "Oak City", "");
         ExternalVisitors visitors = id -> switch (id) {
             case "Beaver Bertha" -> Optional.of(bertha);
             case "Beaver Bruce"  -> Optional.of(bruce);
             default -> Optional.empty();
         };
-        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityBusinessPrices(), visitors);
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityBusinessPrices(), visitors, (email, price) -> {});
 
         var price1 = calculator.calculate(new VisitRequest("Beaver Bertha", constructionFractions(597),  JULY_23));
         var price2 = calculator.calculate(new VisitRequest("Beaver Bruce",  constructionFractions(1803), JULY_23));
 
         assertEquals(125.37, price1.amount(), 0.001);
         assertEquals(490.63, price2.amount(), 0.001); // shares Bertha's 597 kg: (403×0.21)+(1400×0.29)
+    }
+
+    @Test
+    void sendsInvoice_forBusinessVisitor_afterPriceCalculation() {
+        var bertha = new BusinessVisitor("789 Business Ave", "Oak City", "beavers@dam-building.com");
+        ExternalVisitors visitors = id -> Optional.of(bertha);
+        List<String> sentTo = new ArrayList<>();
+        InvoiceSender invoiceSender = (email, price) -> sentTo.add(email);
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), oakCityBusinessPrices(), visitors, invoiceSender);
+
+        calculator.calculate(new VisitRequest("Beaver Bertha", constructionFractions(597), JULY_23));
+
+        assertEquals(List.of("beavers@dam-building.com"), sentTo);
     }
 }

@@ -10,7 +10,7 @@ class ContextTests {
 
     @Test
     void contextHasVisitHistory() {
-        var context = Context.initialize(id -> Optional.empty());
+        var context = Context.initialize(id -> Optional.empty(), (email, price) -> {});
         assertNotNull(context.visitHistories);
     }
 }
