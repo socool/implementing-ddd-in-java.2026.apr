@@ -5,6 +5,7 @@ import com.ddd_in_java.workshop.application.PriceCalculator;
 import com.ddd_in_java.workshop.application.VisitRequest;
 import com.ddd_in_java.workshop.domain.*;
 import com.ddd_in_java.workshop.infrastructure.HttpExternalVisitors;
+import com.ddd_in_java.workshop.infrastructure.HttpInvoiceSender;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,10 @@ public class MainController {
     private Context context;
 
     private void internalInitializeContext() {
-        this.context = Context.initialize(new HttpExternalVisitors(System.getenv("USER_API")));
+        this.context = Context.initialize(
+            new HttpExternalVisitors(System.getenv("USER_API")),
+            new HttpInvoiceSender(System.getenv("INVOICE_API"))
+        );
     }
 
     @GetMapping("/")
@@ -41,7 +45,7 @@ public class MainController {
                 new Weight(dto.amount_dropped())))
             .toList();
         var visitRequest = new VisitRequest(request.person_id(), fractions, request.localDate());
-        var price = new PriceCalculator(context.visitHistories, context.priceCalculators, context.externalVisitors).calculate(visitRequest);
+        var price = new PriceCalculator(context.visitHistories, context.priceCalculators, context.externalVisitors, context.invoiceSender).calculate(visitRequest);
         return ResponseEntity.ok(new PriceCalculationResponse(
             price.amount(), price.currency().toString(),
             request.visit_id(), request.person_id()));

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class HttpExternalVisitors implements ExternalVisitors {
 
-    private record UserDto(String id, String type, String address, String city) {}
+    private record UserDto(String id, String type, String address, String city, String email) {}
 
     private final RestClient restClient;
 
@@ -33,7 +33,7 @@ public class HttpExternalVisitors implements ExternalVisitors {
         return users.stream()
             .filter(u -> u.id().equals(id))
             .findFirst()
-            .map(u -> new ExternalVisitor(u.id(), u.type(), u.address(), u.city()))
+            .map(u -> new ExternalVisitor(u.id(), u.type(), u.address(), u.city(), u.email()))
             .map(Visitor::FromExternalVisitor);
     }
 }
