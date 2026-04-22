@@ -1,0 +1,7 @@
+info:
+  name: session-5-send-invoice-after-payment
+  type: folder
+  seq: 9
+
+request:
+  auth: inherit

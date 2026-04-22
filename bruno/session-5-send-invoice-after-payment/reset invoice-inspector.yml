@@ -1,0 +1,15 @@
+info:
+  name: reset invoice-inspector
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{invoiceUrl}}/api/invoice-inspector/reset"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

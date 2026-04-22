@@ -1,0 +1,23 @@
+info:
+  name: send invoice
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{invoiceUrl}}/api/invoice"
+  body:
+    type: json
+    data: |-
+      {
+        "email": "beavers@dam-building.com",
+        "invoice_amount": 125.37,
+        "invoice_currency": "USD"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

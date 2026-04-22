@@ -1,4 +1,6 @@
-name: default
+name: local
 variables:
   - name: baseUrl
     value: http://localhost:8080
+  - name: invoiceUrl
+    value: http://localhost:9000

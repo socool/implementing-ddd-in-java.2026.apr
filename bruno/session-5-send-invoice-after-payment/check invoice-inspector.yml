@@ -1,0 +1,29 @@
+info:
+  name: check invoice-inspector
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{invoiceUrl}}/api/invoice-inspector/beavers@dam-building.com"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const data = res.getBody();
+
+        test("Invoice request should have the correct invoice amount ", function() {
+          expect(data.body.invoice_amount).to.equal(125.37);
+        });
+
+        test("Invoice request should have the correct invoice currency ", function() {
+          expect(data.body.invoice_currency).to.equal("USD");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
