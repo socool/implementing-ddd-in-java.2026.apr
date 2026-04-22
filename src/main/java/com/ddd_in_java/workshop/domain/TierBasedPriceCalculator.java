@@ -10,6 +10,12 @@ public record TierBasedPriceCalculator(double weightLimit,
     }
 
     public Price calculate(DroppedFraction fraction, Weight previousWeightThisYear) {
-        return null;
+        var remaining      = new Weight(weightLimit).subtract(previousWeightThisYear);
+        double amountForFirst  = Math.min(fraction.weight().amount(), remaining.amount());
+        double amountForSecond = Math.max(0, fraction.weight().amount() - amountForFirst);
+        var droppedForFirst  = new DroppedFraction(fraction.fractionType(), new Weight(amountForFirst));
+        var droppedForSecond = new DroppedFraction(fraction.fractionType(), new Weight(amountForSecond));
+        return firstPriceCalculator.calculate(droppedForFirst)
+                   .add(secondPriceCalculator.calculate(droppedForSecond));
     }
 }
