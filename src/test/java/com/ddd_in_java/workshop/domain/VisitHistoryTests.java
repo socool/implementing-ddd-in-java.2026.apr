@@ -49,6 +49,31 @@ class VisitHistoryTests {
     }
 
     @Test
+    void privateCustomer_with3VisitsInSameMonth_paysFee() {
+        var history = new VisitHistory("Squirrel Gus", oakCityPrices());
+        var visit1 = new Visit(GUS, JULY_23, List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
+        var visit2 = new Visit(GUS, LocalDate.of(2023, 7, 24), List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
+        var visit3 = new Visit(GUS, LocalDate.of(2023, 7, 25), List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
+        history.calculatePriceOfVisit(visit1);
+        history.calculatePriceOfVisit(visit2);
+        var price = history.calculatePriceOfVisit(visit3); // 3rd visit: 100 × 0.08 × 1.05 = 8.40
+        assertEquals(8.40, price.amount(), 0.001);
+    }
+
+    @Test
+    void businessCustomer_with3VisitsInSameMonth_doesNotPayFee() {
+        var business = new ExternalVisitor("Biz", "business", "", "Oak City");
+        var history = new VisitHistory("Biz", oakCityPrices());
+        var visit1 = new Visit(business, JULY_23, List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
+        var visit2 = new Visit(business, LocalDate.of(2023, 7, 24), List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
+        var visit3 = new Visit(business, LocalDate.of(2023, 7, 25), List.of(new DroppedFraction(FractionType.fromString("Green waste"), new Weight(100))));
+        history.calculatePriceOfVisit(visit1);
+        history.calculatePriceOfVisit(visit2);
+        var price = history.calculatePriceOfVisit(visit3); // 3rd visit: 100 × 0.08 = 8.00 (no fee)
+        assertEquals(8.00, price.amount(), 0.001);
+    }
+
+    @Test
     void visitsInDifferentMonthAreNotCounted() {
         var history = new VisitHistory("Squirrel Gus", oakCityPrices());
         history.calculatePriceOfVisit(new Visit(GUS, JULY_23, List.of()));
