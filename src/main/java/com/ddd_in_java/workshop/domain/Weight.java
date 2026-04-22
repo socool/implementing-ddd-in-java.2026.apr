@@ -6,10 +6,10 @@ public record Weight(double amount) {
     }
 
     public Weight add(Weight other) {
-        return null;
+        return new Weight(this.amount + other.amount);
     }
 
     public Weight subtract(Weight other) {
-        return null;
+        return new Weight(Math.max(0, this.amount - other.amount));
     }
 }
