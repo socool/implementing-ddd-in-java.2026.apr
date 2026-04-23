@@ -2,6 +2,8 @@ package com.ddd_in_java.workshop.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PriceTests {
@@ -18,5 +20,21 @@ public class PriceTests {
     @Test
     void pricesAreNotEqual() {
         assertNotEquals(new Price(0, Currency.USD), new Price(1, Currency.USD));
+    }
+
+    @Test
+    void nullFractionTypeDoesNotCrashAndCostsZero() {
+        Price price = new PriceCalculationDomainService()
+            .calculate(List.of(new DroppedFraction(10.0, null)));
+
+        assertEquals(new Price(0, Currency.USD), price);
+    }
+
+    @Test
+    void nullDroppedAmountDoesNotCrashAndCostsZero() {
+        Price price = new PriceCalculationDomainService()
+            .calculate(List.of(new DroppedFraction(null, "Green waste")));
+
+        assertEquals(new Price(0, Currency.USD), price);
     }
 }
