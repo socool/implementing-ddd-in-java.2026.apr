@@ -18,11 +18,21 @@ public class FractionTypeTests {
 
     @Test
     void constructionWastePrice() {
-        assertEquals(new Price(0.15, USD), new FractionType(FractionType.AllowedFractionType.CONSTRUCTION).price());
+        assertEquals(new Price(0.15, USD), new FractionType(FractionType.AllowedFractionType.CONSTRUCTION).priceForCity("Pineville"));
     }
 
     @Test
     void greenWastePrice() {
-        assertEquals(new Price(0.1, USD), new FractionType(FractionType.AllowedFractionType.GREEN).price());
+        assertEquals(new Price(0.1, USD), new FractionType(FractionType.AllowedFractionType.GREEN).priceForCity("Pineville"));
+    }
+
+    @Test
+    void oakCityConstructionWastePrice() {
+        assertEquals(new Price(0.19, USD), new FractionType(FractionType.AllowedFractionType.CONSTRUCTION).priceForCity("Oak City"));
+    }
+
+    @Test
+    void oakCityGreenWastePrice() {
+        assertEquals(new Price(0.08, USD), new FractionType(FractionType.AllowedFractionType.GREEN).priceForCity("Oak City"));
     }
 }

@@ -12,12 +12,12 @@ public class DroppedFractionTests {
         var fraction = new DroppedFraction(
             new FractionType(FractionType.AllowedFractionType.CONSTRUCTION),
             new Weight(10));
-        assertEquals(new Price(10 * 0.15, Currency.USD), fraction.calculatePrice());
+        assertEquals(new Price(10 * 0.15, Currency.USD), fraction.calculatePrice("Pineville"));
     }
 
     @Test
     void sumOfEmptyListIsZero() {
-        assertEquals(new Price(0, Currency.USD), DroppedFraction.sum(List.of()));
+        assertEquals(new Price(0, Currency.USD), DroppedFraction.sum(List.of(), "Pineville"));
     }
 
     @Test
@@ -27,6 +27,16 @@ public class DroppedFractionTests {
             new DroppedFraction(new FractionType(FractionType.AllowedFractionType.CONSTRUCTION), new Weight(5))
         );
         var expected = new Price(10 * 0.15 + 5 * 0.15, Currency.USD);
-        assertEquals(expected, DroppedFraction.sum(fractions));
+        assertEquals(expected, DroppedFraction.sum(fractions, "Pineville"));
+    }
+
+    @Test
+    void oakCityUsesDifferentRates() {
+        var fractions = List.of(
+            new DroppedFraction(new FractionType(FractionType.AllowedFractionType.GREEN), new Weight(83)),
+            new DroppedFraction(new FractionType(FractionType.AllowedFractionType.CONSTRUCTION), new Weight(18))
+        );
+
+        assertEquals(new Price(10.06, Currency.USD), DroppedFraction.sum(fractions, "Oak City"));
     }
 }

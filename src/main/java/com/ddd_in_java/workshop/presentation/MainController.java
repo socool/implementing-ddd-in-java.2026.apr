@@ -14,11 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MainController {
+    private static final String DEFAULT_USER_API = "http://localhost:9000";
 
     private Context context;
 
     private void internalInitializeContext() {
-        this.context = Context.initialize(new HttpExternalVisitors(System.getenv("USER_API")));
+        this.context = Context.initialize(new HttpExternalVisitors(resolveUserApiBaseUrl()));
+    }
+
+    private String resolveUserApiBaseUrl() {
+        String configured = System.getenv("USER_API");
+        if (configured == null || configured.isBlank()) {
+            return DEFAULT_USER_API;
+        }
+        return configured;
+    }
+
+    private Context context() {
+        if (context == null) {
+            internalInitializeContext();
+        }
+        return context;
     }
 
     @GetMapping("/")
@@ -40,7 +56,9 @@ public class MainController {
                 FractionType.fromString(dto.fraction_type()),
                 new Weight(dto.amount_dropped())))
             .toList();
-        var price = new PriceCalculator().calculate(fractions);
+        var visitor = context().externalVisitors.findById(request.person_id())
+            .orElseThrow(() -> new IllegalArgumentException("Unknown visitor: " + request.person_id()));
+        var price = new PriceCalculator().calculate(fractions, visitor.city());
         return ResponseEntity.ok(new PriceCalculationResponse(
             price.amount(), price.currency().toString(),
             request.visit_id(), request.person_id()));
