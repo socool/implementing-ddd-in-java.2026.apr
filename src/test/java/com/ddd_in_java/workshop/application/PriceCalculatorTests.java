@@ -82,4 +82,17 @@ class PriceCalculatorTests {
 
         assertEquals(new Price(125.37, Currency.USD), price);
     }
+
+    @Test
+    void appliesPinevilleBusinessGreenWasteRate() {
+        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var fractions = List.of(
+            new DroppedFraction(FractionType.fromString("Green waste", "Pineville"), new Weight(134)),
+            new DroppedFraction(FractionType.fromString("Construction waste", "Pineville"), new Weight(201))
+        );
+
+        var price = calculator.calculate(fractions, new Visit("Bear Billy", LocalDate.of(2023, 9, 30)), "BUSINESS");
+
+        assertEquals(new Price(42.21, Currency.USD), price);
+    }
 }

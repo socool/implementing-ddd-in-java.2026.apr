@@ -4,7 +4,11 @@ import java.util.List;
 
 public record DroppedFraction(FractionType fractionType, Weight weight) {
     public Price calculatePrice() {
-        return fractionType.price().times(weight.amount());
+        return calculatePrice(VisitorType.PRIVATE);
+    }
+
+    public Price calculatePrice(VisitorType visitorType) {
+        return PricingRules.calculatePrice(PriceKey.from(fractionType, visitorType), weight.amount());
     }
 
     public static Price sum(List<DroppedFraction> fractions) {
