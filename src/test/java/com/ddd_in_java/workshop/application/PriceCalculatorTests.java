@@ -18,10 +18,11 @@ class PriceCalculatorTests {
     private final List<DroppedFraction> fractions = List.of(
             new DroppedFraction(FractionType.fromString("Green waste", "Oak City"), new Weight(103))
     );
+    private final Context context = Context.initialize(id -> java.util.Optional.empty());
 
     @Test
     void appliesFivePercentFeeOnThirdVisitInSameMonth() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), context.pricingRules);
 
         calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_23), "RESIDENT");
         calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_24), "RESIDENT");
@@ -32,7 +33,7 @@ class PriceCalculatorTests {
 
     @Test
     void appliesOakCityBusinessConstructionRateAcrossVisitsInSameYear() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), context.pricingRules);
         var firstVisitFractions = List.of(
             new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(600))
         );
@@ -49,7 +50,7 @@ class PriceCalculatorTests {
 
     @Test
     void resetsOakCityBusinessConstructionExemptionInNewYear() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), context.pricingRules);
         var fractions = List.of(
             new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(900))
         );
@@ -62,7 +63,7 @@ class PriceCalculatorTests {
 
     @Test
     void doesNotApplyThirdVisitFeeToBusinessVisitors() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), context.pricingRules);
 
         calculator.calculate(fractions, new Visit("Acme Corp", JULY_23), "BUSINESS");
         calculator.calculate(fractions, new Visit("Acme Corp", JULY_24), "BUSINESS");
@@ -73,7 +74,7 @@ class PriceCalculatorTests {
 
     @Test
     void recognizesBusinessVisitorsFromNonUppercaseTypeValues() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), context.pricingRules);
         var fractions = List.of(
             new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(597))
         );
@@ -85,7 +86,7 @@ class PriceCalculatorTests {
 
     @Test
     void appliesPinevilleBusinessGreenWasteRate() {
-        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var calculator = new PriceCalculator(new InMemoryVisitHistories(), context.pricingRules);
         var fractions = List.of(
             new DroppedFraction(FractionType.fromString("Green waste", "Pineville"), new Weight(134)),
             new DroppedFraction(FractionType.fromString("Construction waste", "Pineville"), new Weight(201))

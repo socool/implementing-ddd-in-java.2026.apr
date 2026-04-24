@@ -12,10 +12,10 @@ public record FractionType(AllowedFractionType allowedFractionType, String city)
     }
 
     public Price price() {
-        return priceFor(VisitorType.PRIVATE);
+        throw new UnsupportedOperationException("Use priceFor with PricingRules");
     }
 
-    public Price priceFor(VisitorType visitorType) {
-        return PricingRules.calculatePrice(PriceKey.from(this, visitorType), 1);
+    public Price priceFor(VisitorType visitorType, PricingRules pricingRules) {
+        return pricingRules.calculatePrice(PriceKey.from(this, visitorType), 1);
     }
 }

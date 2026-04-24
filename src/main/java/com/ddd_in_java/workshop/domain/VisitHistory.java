@@ -21,10 +21,11 @@ public class VisitHistory {
         return personId;
     }
 
-    public Price calculatePriceOfVisit(Visit visit, List<DroppedFraction> droppedFractions, String visitorType) {
+    public Price calculatePriceOfVisit(Visit visit, List<DroppedFraction> droppedFractions, String visitorType,
+                                       PricingRules pricingRules) {
         VisitorType resolvedVisitorType = VisitorType.fromExternal(visitorType);
         visits.add(visit);
-        var total = calculatePriceFor(visit, droppedFractions, resolvedVisitorType);
+        var total = calculatePriceFor(visit, droppedFractions, resolvedVisitorType, pricingRules);
         if (resolvedVisitorType == VisitorType.PRIVATE && this.numberOfVisitsInSameMonth(visit) >= 3) {
             total = total.times(1.05);
         }
@@ -35,16 +36,18 @@ public class VisitHistory {
         return (int) visits.stream().filter(v -> v.inSameMonth(visit)).count();
     }
 
-    private Price calculatePriceFor(Visit visit, List<DroppedFraction> droppedFractions, VisitorType visitorType) {
+    private Price calculatePriceFor(Visit visit, List<DroppedFraction> droppedFractions, VisitorType visitorType,
+                                    PricingRules pricingRules) {
         return droppedFractions.stream()
-            .map(fraction -> calculatePriceFor(visit, fraction, visitorType))
+            .map(fraction -> calculatePriceFor(visit, fraction, visitorType, pricingRules))
             .reduce(new Price(0, Currency.USD), Price::sum);
     }
 
-    private Price calculatePriceFor(Visit visit, DroppedFraction fraction, VisitorType visitorType) {
+    private Price calculatePriceFor(Visit visit, DroppedFraction fraction, VisitorType visitorType,
+                                    PricingRules pricingRules) {
         PriceKey priceKey = PriceKey.from(fraction.fractionType(), visitorType);
-        if (!PricingRules.usesTierBasedCalculation(priceKey)) {
-            return fraction.calculatePrice(visitorType);
+        if (!pricingRules.usesTierBasedCalculation(priceKey)) {
+            return fraction.calculatePrice(visitorType, pricingRules);
         }
 
         YearlyPriceKey yearlyPriceKey = new YearlyPriceKey(priceKey, visit.date().getYear());
@@ -52,6 +55,6 @@ public class VisitHistory {
         double currentWeight = fraction.weight().amount();
         tierBasedUsageByYear.put(yearlyPriceKey, alreadyUsed + currentWeight);
 
-        return PricingRules.calculatePrice(priceKey, currentWeight, alreadyUsed);
+        return pricingRules.calculatePrice(priceKey, currentWeight, alreadyUsed);
     }
 }

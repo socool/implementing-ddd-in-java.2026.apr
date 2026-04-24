@@ -4,16 +4,10 @@ import java.util.List;
 
 public record DroppedFraction(FractionType fractionType, Weight weight) {
     public Price calculatePrice() {
-        return calculatePrice(VisitorType.PRIVATE);
+        throw new UnsupportedOperationException("Use calculatePrice with PricingRules");
     }
 
-    public Price calculatePrice(VisitorType visitorType) {
-        return PricingRules.calculatePrice(PriceKey.from(fractionType, visitorType), weight.amount());
-    }
-
-    public static Price sum(List<DroppedFraction> fractions) {
-        return fractions.stream()
-            .map(DroppedFraction::calculatePrice)
-            .reduce(new Price(0, Currency.USD), Price::sum);
+    public Price calculatePrice(VisitorType visitorType, PricingRules pricingRules) {
+        return pricingRules.calculatePrice(PriceKey.from(fractionType, visitorType), weight.amount());
     }
 }

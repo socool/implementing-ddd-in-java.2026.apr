@@ -12,5 +12,6 @@ class ContextTests {
     void contextHasVisitHistory() {
         var context = Context.initialize(id -> Optional.empty());
         assertNotNull(context.visitHistories);
+        assertNotNull(context.pricingRules);
     }
 }
