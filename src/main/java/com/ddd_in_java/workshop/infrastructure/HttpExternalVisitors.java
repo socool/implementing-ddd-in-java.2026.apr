@@ -15,11 +15,23 @@ public class HttpExternalVisitors implements ExternalVisitors {
     private final RestClient restClient;
 
     public HttpExternalVisitors(String baseUrl) {
-        this(RestClient.builder().baseUrl(baseUrl));
+        this(RestClient.builder().baseUrl(normalizeBaseUrl(baseUrl)));
     }
 
     HttpExternalVisitors(RestClient.Builder builder) {
         this.restClient = builder.build();
+    }
+
+    private static String normalizeBaseUrl(String baseUrl) {
+        if (baseUrl == null || baseUrl.isBlank()) {
+            throw new IllegalArgumentException("USER_API must be configured with an absolute URL");
+        }
+
+        String normalized = baseUrl.trim();
+        if (!normalized.contains("://")) {
+            normalized = "http://" + normalized;
+        }
+        return normalized;
     }
 
     @Override

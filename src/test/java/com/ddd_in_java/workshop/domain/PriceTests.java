@@ -29,4 +29,9 @@ public class PriceTests {
     void add() {
         assertEquals(new Price(7, Currency.USD), new Price(2, Currency.USD).add(new Price(5, Currency.USD)));
     }
+
+    @Test
+    void addRoundsToTwoDecimals() {
+        assertEquals(new Price(10.06, Currency.USD), new Price(8.3, Currency.USD).add(new Price(1.76, Currency.USD)));
+    }
 }

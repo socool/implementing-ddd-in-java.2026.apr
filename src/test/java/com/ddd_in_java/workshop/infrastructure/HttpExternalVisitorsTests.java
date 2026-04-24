@@ -40,4 +40,9 @@ public class HttpExternalVisitorsTests {
         assertEquals(Optional.of(new ExternalVisitor("42", "RESIDENT", "1 Main St", "Oak City")), visitor);
     }
 
+    @Test
+    void addsHttpSchemeWhenBaseUrlHasNone() {
+        assertDoesNotThrow(() -> new HttpExternalVisitors("localhost:9000"));
+    }
+
 }

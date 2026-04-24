@@ -4,6 +4,7 @@ import com.ddd_in_java.workshop.application.Context;
 import com.ddd_in_java.workshop.application.PriceCalculator;
 import com.ddd_in_java.workshop.domain.*;
 import com.ddd_in_java.workshop.infrastructure.HttpExternalVisitors;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainController {
 
+    private final String userApiBaseUrl;
     private Context context;
 
+    public MainController(@Value("${USER_API}") String userApiBaseUrl) {
+        this.userApiBaseUrl = userApiBaseUrl;
+    }
+
     private void internalInitializeContext() {
-        this.context = Context.initialize(new HttpExternalVisitors(System.getenv("USER_API")));
+        this.context = Context.initialize(new HttpExternalVisitors(userApiBaseUrl));
     }
 
     @GetMapping("/")
