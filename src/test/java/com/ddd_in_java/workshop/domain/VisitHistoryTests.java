@@ -14,15 +14,15 @@ class VisitHistoryTests {
     @Test
     void firstVisitIsCounted() {
         var history = new VisitHistory("Squirrel Gus");
-        history.calculatePriceOfVisit(new Visit("Squirrel Gus", JULY_23), List.of());
+        history.calculatePriceOfVisit(new Visit("Squirrel Gus", JULY_23), List.of(), "RESIDENT");
         assertEquals(1, history.numberOfVisitsInSameMonth(new Visit("Squirrel Gus", JULY_23)));
     }
 
     @Test
     void visitsInDifferentMonthAreNotCounted() {
         var history = new VisitHistory("Squirrel Gus");
-        history.calculatePriceOfVisit(new Visit("Squirrel Gus", JULY_23), List.of());
-        history.calculatePriceOfVisit(new Visit("Squirrel Gus", LocalDate.of(2023, 7, 24)), List.of());
+        history.calculatePriceOfVisit(new Visit("Squirrel Gus", JULY_23), List.of(), "RESIDENT");
+        history.calculatePriceOfVisit(new Visit("Squirrel Gus", LocalDate.of(2023, 7, 24)), List.of(), "RESIDENT");
         assertEquals(0, history.numberOfVisitsInSameMonth(new Visit("Squirrel Gus", LocalDate.of(2023, 8, 1))));
     }
 }

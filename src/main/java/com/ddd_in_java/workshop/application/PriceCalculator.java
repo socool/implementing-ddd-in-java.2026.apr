@@ -15,10 +15,10 @@ public class PriceCalculator {
     this.visitHistories = visitHistories;
   }
 
-  public Price calculate(List<DroppedFraction> fractions, Visit visit) {
+  public Price calculate(List<DroppedFraction> fractions, Visit visit, String visitorType) {
     VisitHistory history = visitHistories.findByPersonId(visit.personId())
         .orElse(new VisitHistory(visit.personId()));
-    Price price = history.calculatePriceOfVisit(visit, fractions);
+    Price price = history.calculatePriceOfVisit(visit, fractions, visitorType);
     visitHistories.save(history);
     return price;
   }

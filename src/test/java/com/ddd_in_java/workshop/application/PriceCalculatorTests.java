@@ -23,10 +23,63 @@ class PriceCalculatorTests {
     void appliesFivePercentFeeOnThirdVisitInSameMonth() {
         var calculator = new PriceCalculator(new InMemoryVisitHistories());
 
-        calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_23));
-        calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_24));
-        var price = calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_25));
+        calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_23), "RESIDENT");
+        calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_24), "RESIDENT");
+        var price = calculator.calculate(fractions, new Visit("Squirrel Gus", JULY_25), "RESIDENT");
 
         assertEquals(new Price(8.65, Currency.USD), price);
+    }
+
+    @Test
+    void appliesOakCityBusinessConstructionRateAcrossVisitsInSameYear() {
+        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var firstVisitFractions = List.of(
+            new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(600))
+        );
+        var secondVisitFractions = List.of(
+            new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(900))
+        );
+
+        var firstPrice = calculator.calculate(firstVisitFractions, new Visit("Acme Corp", JULY_23), "BUSINESS");
+        var secondPrice = calculator.calculate(secondVisitFractions, new Visit("Acme Corp", JULY_24), "BUSINESS");
+
+        assertEquals(new Price(126, Currency.USD), firstPrice);
+        assertEquals(new Price(229, Currency.USD), secondPrice);
+    }
+
+    @Test
+    void resetsOakCityBusinessConstructionExemptionInNewYear() {
+        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var fractions = List.of(
+            new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(900))
+        );
+
+        calculator.calculate(fractions, new Visit("Acme Corp", LocalDate.of(2023, 12, 31)), "BUSINESS");
+        var januaryPrice = calculator.calculate(fractions, new Visit("Acme Corp", LocalDate.of(2024, 1, 1)), "BUSINESS");
+
+        assertEquals(new Price(189, Currency.USD), januaryPrice);
+    }
+
+    @Test
+    void doesNotApplyThirdVisitFeeToBusinessVisitors() {
+        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+
+        calculator.calculate(fractions, new Visit("Acme Corp", JULY_23), "BUSINESS");
+        calculator.calculate(fractions, new Visit("Acme Corp", JULY_24), "BUSINESS");
+        var price = calculator.calculate(fractions, new Visit("Acme Corp", JULY_25), "BUSINESS");
+
+        assertEquals(new Price(8.24, Currency.USD), price);
+    }
+
+    @Test
+    void recognizesBusinessVisitorsFromNonUppercaseTypeValues() {
+        var calculator = new PriceCalculator(new InMemoryVisitHistories());
+        var fractions = List.of(
+            new DroppedFraction(FractionType.fromString("Construction waste", "Oak City"), new Weight(597))
+        );
+
+        var price = calculator.calculate(fractions, new Visit("Beaver Bertha", JULY_23), "business customer");
+
+        assertEquals(new Price(125.37, Currency.USD), price);
     }
 }
